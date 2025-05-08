@@ -1,7 +1,7 @@
 
 import { MenuItem } from "@/types";
 
-// Sample menu data with maxQuantity limit set to 4
+// Menu data with appropriate image paths
 export const menuItems: MenuItem[] = [
   {
     id: "1",

@@ -27,6 +27,10 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({ item }) => {
             src={item.image}
             alt={item.name}
             className="w-full h-full object-cover rounded-md"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = '/placeholder.svg';
+            }}
           />
         </div>
       </div>

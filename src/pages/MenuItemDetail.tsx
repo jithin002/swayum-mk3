@@ -75,6 +75,17 @@ const MenuItemDetail: React.FC = () => {
 
       <main className="flex-1 p-4">
         <div className="bg-white rounded-lg overflow-hidden shadow-md mb-6">
+          <div className="w-full h-48">
+            <img 
+              src={menuItem.image} 
+              alt={menuItem.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = '/placeholder.svg';
+              }}
+            />
+          </div>
           <div className="p-4">
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold">{menuItem.name}</h1>

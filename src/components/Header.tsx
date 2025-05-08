@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bell } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
 const Header: React.FC = () => {
@@ -16,15 +16,14 @@ const Header: React.FC = () => {
         </div>
       </Link>
       
-      <div className="flex items-center gap-4">
-        <Link to="/notifications" aria-label="Notifications">
-          <Bell size={24} />
-        </Link>
-        
-        <Link to="/profile" className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-          <span className="text-lg font-bold">U</span>
-        </Link>
-      </div>
+      <Link to="/cart" className="relative" aria-label="Cart">
+        <ShoppingCart size={24} />
+        {cartItemCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-swayum-orange text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {cartItemCount}
+          </span>
+        )}
+      </Link>
     </header>
   );
 };

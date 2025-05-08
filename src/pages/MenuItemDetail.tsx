@@ -5,8 +5,7 @@ import { getMenuItemById } from "@/services/menuService";
 import { useCart } from "@/context/CartContext";
 import TimeSlotSelector from "@/components/TimeSlotSelector";
 import QuantitySelector from "@/components/QuantitySelector";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import FloatingAddToCart from "@/components/FloatingAddToCart";
 import { toast } from "sonner";
 
 const MenuItemDetail: React.FC = () => {
@@ -62,10 +61,8 @@ const MenuItemDetail: React.FC = () => {
     }
   };
 
-  const totalPrice = menuItem.price * quantity;
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col pb-32">
       <div className="swayum-header">
         <Link to="/menu" className="text-white">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,13 +73,8 @@ const MenuItemDetail: React.FC = () => {
         <div className="w-6"></div> {/* Empty div for spacing */}
       </div>
 
-      <main className="flex-1 p-4 mb-16">
+      <main className="flex-1 p-4">
         <div className="bg-white rounded-lg overflow-hidden shadow-md mb-6">
-          <img
-            src={menuItem.image}
-            alt={menuItem.name}
-            className="w-full h-48 object-cover"
-          />
           <div className="p-4">
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold">{menuItem.name}</h1>
@@ -124,28 +116,14 @@ const MenuItemDetail: React.FC = () => {
             selectedTime={selectedTime}
           />
         </div>
-        
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4">
-          <div className="flex justify-between items-center mb-3">
-            <div>
-              <span className="text-gray-500">Total:</span>
-              <span className="ml-2 text-xl font-bold">₹{totalPrice}</span>
-            </div>
-            <div className="flex items-center">
-              <span className="text-gray-500 mr-2">Quantity:</span>
-              <span>{quantity}</span>
-            </div>
-          </div>
-          <button 
-            className="swayum-btn w-full"
-            onClick={handleAddToCart}
-          >
-            Add to Cart
-          </button>
-        </div>
       </main>
       
-      <Footer />
+      <FloatingAddToCart 
+        price={menuItem.price}
+        quantity={quantity}
+        onAddToCart={handleAddToCart}
+        disabled={!selectedTime}
+      />
     </div>
   );
 };

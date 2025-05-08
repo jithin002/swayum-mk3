@@ -36,3 +36,10 @@ export interface Order {
   pickupTime: string;
   status: OrderStatus;
 }
+
+export interface PaymentInfo {
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
+}

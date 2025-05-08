@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,13 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				swayum: {
+					orange: '#FF6B35',
+					'light-orange': '#FF8C61',
+					'dark-orange': '#E85D2C',
+					'bg-light': '#F9F7F4',
+					'text-dark': '#333333'
 				}
 			},
 			borderRadius: {

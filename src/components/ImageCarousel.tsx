@@ -13,14 +13,14 @@ const ImageCarousel: React.FC = () => {
   const [images, setImages] = useState<CarouselImage[]>([]);
   const [loading, setLoading] = useState(true);
   
-  // Fetch menu items from Supabase to use their images in the carousel
+  // Fetch images from carousel_images table
   useEffect(() => {
-    const fetchMenuImages = async () => {
+    const fetchCarouselImages = async () => {
       try {
         const { data, error } = await supabase
-          .from('menu_items')
-          .select('image_url, name')
-          .not('image_url', 'is', null);
+          .from('carousel_images')
+          .select('image_url, alt_text')
+          .eq('active', true);
         
         if (error) {
           console.error("Error fetching carousel images:", error);
@@ -35,7 +35,7 @@ const ImageCarousel: React.FC = () => {
           // Transform Supabase data to carousel images
           const fetchedImages = data.map(item => ({
             src: item.image_url || "/placeholder.svg",
-            alt: item.name || "Menu item"
+            alt: item.alt_text || "Carousel image"
           }));
           
           // Use fetched images if available, otherwise use defaults
@@ -53,7 +53,7 @@ const ImageCarousel: React.FC = () => {
       }
     };
     
-    fetchMenuImages();
+    fetchCarouselImages();
   }, []);
   
   // Auto-slide functionality

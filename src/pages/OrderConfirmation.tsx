@@ -3,12 +3,18 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useOrder } from "@/context/OrderContext";
 import { Check, Package, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useCart } from "@/context/CartContext";
 
 const OrderConfirmation: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { getOrderById, updateOrderStatus } = useOrder();
+  const { getOrderById, updateOrderStatus, collectOrder } = useOrder();
+  const { clearCart } = useCart();
   const navigate = useNavigate();
   const [order, setOrder] = useState(getOrderById(id || ""));
+  const [collectionCode, setCollectionCode] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (!order) {
@@ -34,6 +40,24 @@ const OrderConfirmation: React.FC = () => {
   }, [order, navigate, updateOrderStatus, getOrderById]);
 
   if (!order) return null;
+
+  const handleCollectOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!collectionCode) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    const success = await collectOrder(order.id, collectionCode);
+    
+    if (success) {
+      clearCart(); // Clear the cart after successful collection
+      
+      // Update the local order
+      setOrder(getOrderById(order.id));
+    }
+    setIsSubmitting(false);
+  };
 
   return (
     <div className="min-h-screen flex flex-col pb-20">
@@ -76,6 +100,40 @@ const OrderConfirmation: React.FC = () => {
             <span className="text-gray-500">Pickup Time</span>
             <span className="font-medium">{order.pickupTime}</span>
           </div>
+          
+          {order.orderCode && !order.status.completed && (
+            <div className="mt-4 pt-4 border-t">
+              <form onSubmit={handleCollectOrder}>
+                <h4 className="font-medium mb-2">Collect Order</h4>
+                <div className="flex items-center gap-2">
+                  <Input 
+                    type="text" 
+                    placeholder="Enter collection code" 
+                    value={collectionCode}
+                    onChange={(e) => setCollectionCode(e.target.value)}
+                    className="flex-1"
+                  />
+                  <Button 
+                    type="submit"
+                    className="bg-swayum-orange hover:bg-orange-600"
+                    disabled={isSubmitting || !collectionCode}
+                  >
+                    {isSubmitting ? "Verifying..." : "Collect"}
+                  </Button>
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Enter code "1234" to test the collection feature</p>
+              </form>
+            </div>
+          )}
+          
+          {order.status.completed && (
+            <div className="mt-4 pt-3 border-t">
+              <div className="flex items-center text-green-600">
+                <Check size={18} className="mr-2" />
+                <span className="font-medium">Order has been collected</span>
+              </div>
+            </div>
+          )}
         </div>
         
         <div className="bg-white rounded-lg shadow-md p-5 mb-6">
@@ -170,6 +228,11 @@ const OrderConfirmation: React.FC = () => {
             </div>
           </div>
           <p className="text-center font-semibold">Show this QR code when picking up your order</p>
+          {order.orderCode && (
+            <p className="text-center text-gray-600 mt-2">
+              Collection Code: <strong className="text-swayum-orange">{order.orderCode}</strong>
+            </p>
+          )}
         </div>
       </main>
       

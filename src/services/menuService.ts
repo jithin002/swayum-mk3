@@ -1,4 +1,5 @@
 
+import { supabase } from "@/integrations/supabase/client";
 import { MenuItem } from "@/types";
 
 // Menu data with appropriate image paths
@@ -82,14 +83,80 @@ export const menuItems: MenuItem[] = [
   }
 ];
 
-export const getMenuItems = (): MenuItem[] => {
+// Function to fetch menu items from Supabase
+export const fetchMenuItemsFromDB = async (): Promise<MenuItem[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*');
+    
+    if (error) {
+      console.error('Error fetching menu items:', error);
+      return menuItems; // Return fallback data if Supabase fetch fails
+    }
+    
+    // Transform the Supabase data to match our MenuItem type
+    const transformedData: MenuItem[] = data.map(item => ({
+      id: item.id.toString(),
+      name: item.name,
+      price: Number(item.price),
+      description: item.description || "",
+      image: item.image_url || "/placeholder.svg", 
+      category: item.category || "Other",
+      isVegetarian: item.is_vegetarian || false,
+      available: item.available || true,
+      maxQuantity: item.max_quantity || 4
+    }));
+    
+    return transformedData.length > 0 ? transformedData : menuItems;
+  } catch (error) {
+    console.error('Error in fetchMenuItemsFromDB:', error);
+    return menuItems; // Return fallback data on error
+  }
+};
+
+// Get menu items (with option to fetch from DB)
+export const getMenuItems = async (useDB: boolean = true): Promise<MenuItem[]> => {
+  if (useDB) {
+    return await fetchMenuItemsFromDB();
+  }
   return menuItems;
 };
 
-export const getMenuItemById = (id: string): MenuItem | undefined => {
+// Get a menu item by ID 
+export const getMenuItemById = async (id: string, useDB: boolean = true): Promise<MenuItem | undefined> => {
+  if (useDB) {
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*')
+        .eq('id', parseInt(id))
+        .single();
+      
+      if (error || !data) {
+        return menuItems.find(item => item.id === id);
+      }
+      
+      return {
+        id: data.id.toString(),
+        name: data.name,
+        price: Number(data.price),
+        description: data.description || "",
+        image: data.image_url || "/placeholder.svg",
+        category: data.category || "Other",
+        isVegetarian: data.is_vegetarian || false,
+        available: data.available !== false,
+        maxQuantity: data.max_quantity || 4
+      };
+    } catch (error) {
+      console.error('Error in getMenuItemById:', error);
+      return menuItems.find(item => item.id === id);
+    }
+  }
   return menuItems.find(item => item.id === id);
 };
 
-export const getMenuItemsByCategory = (category: string): MenuItem[] => {
-  return menuItems.filter(item => item.category === category);
+export const getMenuItemsByCategory = async (category: string, useDB: boolean = true): Promise<MenuItem[]> => {
+  const items = await getMenuItems(useDB);
+  return items.filter(item => item.category === category);
 };

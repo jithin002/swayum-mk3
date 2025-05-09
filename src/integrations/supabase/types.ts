@@ -9,7 +9,144 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      menu_items: {
+        Row: {
+          available: boolean | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          id: number
+          image_url: string | null
+          is_vegetarian: boolean | null
+          max_quantity: number | null
+          name: string
+          price: number
+        }
+        Insert: {
+          available?: boolean | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          is_vegetarian?: boolean | null
+          max_quantity?: number | null
+          name: string
+          price: number
+        }
+        Update: {
+          available?: boolean | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          is_vegetarian?: boolean | null
+          max_quantity?: number | null
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
+      order_items: {
+        Row: {
+          created_at: string | null
+          id: number
+          item_id: number | null
+          item_name: string
+          order_id: string | null
+          price: number
+          quantity: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          item_id?: number | null
+          item_name: string
+          order_id?: string | null
+          price: number
+          quantity: number
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          item_id?: number | null
+          item_name?: string
+          order_id?: string | null
+          price?: number
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          collected: boolean | null
+          created_at: string | null
+          id: string
+          order_code: string | null
+          pickup_time: string | null
+          status: string
+          total_amount: number
+          user_id: string | null
+        }
+        Insert: {
+          collected?: boolean | null
+          created_at?: string | null
+          id?: string
+          order_code?: string | null
+          pickup_time?: string | null
+          status?: string
+          total_amount: number
+          user_id?: string | null
+        }
+        Update: {
+          collected?: boolean | null
+          created_at?: string | null
+          id?: string
+          order_code?: string | null
+          pickup_time?: string | null
+          status?: string
+          total_amount?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

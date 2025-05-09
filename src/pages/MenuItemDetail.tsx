@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getMenuItemById } from "@/services/menuService";
 import { useCart } from "@/context/CartContext";
@@ -7,15 +7,42 @@ import TimeSlotSelector from "@/components/TimeSlotSelector";
 import QuantitySelector from "@/components/QuantitySelector";
 import FloatingAddToCart from "@/components/FloatingAddToCart";
 import { toast } from "sonner";
+import { MenuItem } from "@/types";
 
 const MenuItemDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const menuItem = getMenuItemById(id || "");
+  const [menuItem, setMenuItem] = useState<MenuItem | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
   const { addToCart, isQuantityAvailable } = useCart();
   
   const [quantity, setQuantity] = useState(1);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMenuItem = async () => {
+      try {
+        setLoading(true);
+        const item = await getMenuItemById(id || "", true);
+        setMenuItem(item);
+      } catch (error) {
+        console.error("Error fetching menu item:", error);
+        toast.error("Failed to load menu item details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMenuItem();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-swayum-orange"></div>
+      </div>
+    );
+  }
 
   if (!menuItem) {
     return (

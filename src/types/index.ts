@@ -35,6 +35,7 @@ export interface Order {
   orderDate: string;
   pickupTime: string;
   status: OrderStatus;
+  orderCode?: string;
 }
 
 export interface PaymentInfo {

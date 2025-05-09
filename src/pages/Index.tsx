@@ -1,8 +1,9 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ImageCarousel from "@/components/ImageCarousel";
 
 const Index: React.FC = () => {
   return (
@@ -11,15 +12,9 @@ const Index: React.FC = () => {
       
       <main className="flex-1 px-4 py-6 mb-16">
         <div className="mb-8">
-          <div className="rounded-lg overflow-hidden h-48 mb-4">
-            <img
-              src="/lovable-uploads/7ac79e1a-32a9-4be0-b5fe-daccedb94e1f.png"
-              alt="Canteen"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <ImageCarousel />
           
-          <h1 className="text-4xl font-bold mb-2">Welcome, User!</h1>
+          <h1 className="text-4xl font-bold mb-2 mt-6">Welcome, User!</h1>
           <p className="text-xl text-gray-600">What would you like to explore today?</p>
         </div>
         
@@ -70,19 +65,19 @@ const Index: React.FC = () => {
           </Link>
           
           <Link 
-            to="/about" 
+            to="/auth" 
             className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="bg-orange-100 p-2 rounded-full">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-swayum-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h2 className="text-xl font-semibold">About Us</h2>
-                  <p className="text-gray-600">Learn more about SwaYum</p>
+                  <h2 className="text-xl font-semibold">Sign In / Sign Up</h2>
+                  <p className="text-gray-600">Manage your account and orders</p>
                 </div>
               </div>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

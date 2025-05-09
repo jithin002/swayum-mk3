@@ -1,13 +1,33 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MenuItemCard from "@/components/MenuItemCard";
 import { getMenuItems } from "@/services/menuService";
+import { MenuItem } from "@/types";
+import { toast } from "sonner";
 
 const MenuPage: React.FC = () => {
-  const menuItems = getMenuItems();
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  
+  useEffect(() => {
+    const loadMenuItems = async () => {
+      try {
+        setLoading(true);
+        const items = await getMenuItems(true); // true to fetch from DB
+        setMenuItems(items);
+      } catch (error) {
+        console.error("Error loading menu items:", error);
+        toast.error("Failed to load menu items. Showing fallback data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadMenuItems();
+  }, []);
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -22,11 +42,17 @@ const MenuPage: React.FC = () => {
       </div>
       
       <main className="flex-1 p-4 mb-16">
-        <div className="space-y-4">
-          {menuItems.map((item) => (
-            <MenuItemCard key={item.id} item={item} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-swayum-orange"></div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {menuItems.map((item) => (
+              <MenuItemCard key={item.id} item={item} />
+            ))}
+          </div>
+        )}
       </main>
       
       <Footer />

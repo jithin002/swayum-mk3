@@ -14,7 +14,7 @@ const CartPage: React.FC = () => {
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
       return;
@@ -22,17 +22,29 @@ const CartPage: React.FC = () => {
 
     setIsProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
-      const pickupTime = cartItems[0].pickupTime;
-      const totalAmount = getCartTotal();
-      
-      const order = createOrder(cartItems, totalAmount, pickupTime);
-      clearCart();
-      
+    try {
+      // Simulate payment processing
+      setTimeout(async () => {
+        const pickupTime = cartItems[0].pickupTime;
+        const totalAmount = getCartTotal();
+        
+        // Await the order creation to get the order object
+        const order = await createOrder(cartItems, totalAmount, pickupTime);
+        
+        if (order) {
+          clearCart();
+          navigate(`/order-confirmation/${order.id}`);
+        } else {
+          toast.error("Failed to create order");
+        }
+        
+        setIsProcessing(false);
+      }, 1500);
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      toast.error("Checkout failed. Please try again.");
       setIsProcessing(false);
-      navigate(`/order-confirmation/${order.id}`);
-    }, 1500);
+    }
   };
 
   const groupedItems = cartItems.reduce((acc, item) => {

@@ -204,35 +204,13 @@ const OrderConfirmation: React.FC = () => {
         </div>
         
         <div className="bg-white rounded-lg shadow-md p-5 mb-6">
-          <h3 className="text-lg font-semibold mb-3">Pickup QR Code</h3>
+          <h3 className="text-lg font-semibold mb-3">Collection Code</h3>
           <div className="flex justify-center mb-4">
-            <div className="border-2 border-swayum-orange p-2 rounded-md">
-              <svg className="h-48 w-48" viewBox="0 0 100 100" fill="black">
-                <rect x="10" y="10" width="30" height="30" />
-                <rect x="60" y="10" width="30" height="30" />
-                <rect x="10" y="60" width="30" height="30" />
-                <rect x="45" y="15" width="5" height="20" />
-                <rect x="15" y="45" width="20" height="5" />
-                <rect x="65" y="45" width="20" height="5" />
-                <rect x="45" y="65" width="5" height="20" />
-                <rect x="65" y="65" width="5" height="5" />
-                <rect x="75" y="65" width="5" height="5" />
-                <rect x="85" y="65" width="5" height="5" />
-                <rect x="65" y="75" width="5" height="5" />
-                <rect x="75" y="75" width="5" height="5" />
-                <rect x="85" y="75" width="5" height="5" />
-                <rect x="65" y="85" width="5" height="5" />
-                <rect x="75" y="85" width="5" height="5" />
-                <rect x="85" y="85" width="5" height="5" />
-              </svg>
+            <div className="border-2 border-swayum-orange p-4 rounded-md">
+              <span className="text-3xl font-bold text-swayum-orange">{order.orderCode}</span>
             </div>
           </div>
-          <p className="text-center font-semibold">Show this QR code when picking up your order</p>
-          {order.orderCode && (
-            <p className="text-center text-gray-600 mt-2">
-              Collection Code: <strong className="text-swayum-orange">{order.orderCode}</strong>
-            </p>
-          )}
+          <p className="text-center font-semibold">Show this code when picking up your order</p>
         </div>
       </main>
       

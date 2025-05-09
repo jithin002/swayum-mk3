@@ -55,8 +55,8 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
         }
         orderId = dbOrderId;
       } else {
-        // Fallback to local storage if not logged in
-        orderId = `SW${Math.floor(10000 + Math.random() * 90000)}`;
+        // Fallback to local storage if not logged in - Create a simpler order ID format
+        orderId = `SW-${Math.floor(1000 + Math.random() * 9000)}`;
       }
       
       const newOrder: Order = {

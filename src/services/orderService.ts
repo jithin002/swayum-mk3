@@ -19,7 +19,7 @@ export const createOrderInDB = async (
     // Create a random 4-digit order code
     const orderCode = Math.floor(1000 + Math.random() * 9000).toString();
     
-    // Insert the order
+    // Insert the order with a shorter, simpler ID format
     const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .insert({
@@ -37,11 +37,12 @@ export const createOrderInDB = async (
       return null;
     }
     
-    const orderId = orderData.id;
+    // Create a shorter, more user-friendly order ID format
+    const shortOrderId = `SW-${orderData.id.substring(0, 4)}`;
     
     // Insert order items
     const orderItems = cartItems.map(item => ({
-      order_id: orderId,
+      order_id: orderData.id,
       item_id: parseInt(item.id),
       item_name: item.name,
       price: item.price,
@@ -57,7 +58,7 @@ export const createOrderInDB = async (
       return null;
     }
     
-    return orderId;
+    return shortOrderId;
   } catch (error) {
     console.error("Error creating order:", error);
     return null;

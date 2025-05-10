@@ -1,9 +1,10 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ImageCarousel from "@/components/ImageCarousel";
+import { QrCode, Bell, ShoppingCart } from "lucide-react";
 
 const Index: React.FC = () => {
   return (
@@ -18,7 +19,7 @@ const Index: React.FC = () => {
           <p className="text-xl text-gray-600">What would you like to explore today?</p>
         </div>
         
-        <div className="space-y-4">
+        <div className="space-y-4 mb-12">
           <Link 
             to="/menu" 
             className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
@@ -85,6 +86,49 @@ const Index: React.FC = () => {
               </svg>
             </div>
           </Link>
+        </div>
+        
+        {/* How It Works Section */}
+        <div className="py-10">
+          <h2 className="text-3xl font-bold text-center mb-10">How It Works</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="relative">
+                <div className="bg-orange-100 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                  <ShoppingCart size={32} className="text-swayum-orange" />
+                </div>
+                <span className="absolute top-0 right-0 bg-swayum-orange text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">1</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Order & Pay Online</h3>
+              <p className="text-gray-600">Browse the menu and place your order from anywhere on campus</p>
+            </div>
+            
+            {/* Step 2 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="relative">
+                <div className="bg-orange-100 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                  <Bell size={32} className="text-swayum-orange" />
+                </div>
+                <span className="absolute top-0 right-0 bg-swayum-orange text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">2</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Get Notified</h3>
+              <p className="text-gray-600">Receive a notification when your order is ready for pickup</p>
+            </div>
+            
+            {/* Step 3 */}
+            <div className="flex flex-col items-center text-center">
+              <div className="relative">
+                <div className="bg-orange-100 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                  <QrCode size={32} className="text-swayum-orange" />
+                </div>
+                <span className="absolute top-0 right-0 bg-swayum-orange text-white w-8 h-8 rounded-full flex items-center justify-center font-bold">3</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Scan & Collect</h3>
+              <p className="text-gray-600">Show your QR code at the counter and enjoy your meal</p>
+            </div>
+          </div>
         </div>
       </main>
       

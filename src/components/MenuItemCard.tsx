@@ -19,7 +19,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
           <div className="mt-2">
             {item.isVegetarian && <div className="flex items-center">
                 <span className="inline-block w-3 h-3 rounded-full bg-green-500 mr-2 text-xs"></span>
-                <span className="text-xs">Vegetarian</span>
+                <span className="text-xs">Veg</span>
               </div>}
           </div>
         </div>

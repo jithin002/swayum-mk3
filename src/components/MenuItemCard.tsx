@@ -25,10 +25,10 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
         </div>
         
         {item.image && <div className="mt-2">
-            <img src={item.image} alt={item.name} className="w-full h-48 object-cover rounded-md" onError={e => {
+            <img src={item.image} alt={item.name} onError={e => {
           const target = e.target as HTMLImageElement;
           target.src = '/placeholder.svg';
-        }} />
+        }} className="w-full h-48 rounded-md object-cover" />
           </div>}
         
         

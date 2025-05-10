@@ -26,7 +26,7 @@ export const createOrderInDB = async (
                    today.getDate().toString().padStart(2, '0');
     
     // Insert the order with a ref_id field that contains the formatted date
-    const { data: orderData, error: orderError } = await supabase
+    const { data, error } = await supabase
       .from('orders')
       .insert({
         user_id: userId,
@@ -34,22 +34,22 @@ export const createOrderInDB = async (
         status: 'pending',
         pickup_time: pickupTime,
         order_code: orderCode,
-        ref_id: `${dateStr}` // Store date part in the database
+        ref_id: dateStr // Store date part in the database
       })
       .select('id, ref_id')
       .single();
       
-    if (orderError || !orderData) {
-      console.error("Failed to create order:", orderError);
+    if (error || !data) {
+      console.error("Failed to create order:", error);
       return null;
     }
     
     // Create a formatted order ID with SW prefix and date
-    const shortOrderId = `SW-${orderData.ref_id}-${orderData.id.substring(0, 4)}`;
+    const shortOrderId = `SW-${data.ref_id}-${data.id.substring(0, 4)}`;
     
     // Insert order items
     const orderItems = cartItems.map(item => ({
-      order_id: orderData.id,
+      order_id: data.id,
       item_id: parseInt(item.id),
       item_name: item.name,
       price: item.price,

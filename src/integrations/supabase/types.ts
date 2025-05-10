@@ -124,6 +124,7 @@ export type Database = {
           id: string
           order_code: string | null
           pickup_time: string | null
+          ref_id: string | null
           status: string
           total_amount: number
           user_id: string | null
@@ -134,6 +135,7 @@ export type Database = {
           id?: string
           order_code?: string | null
           pickup_time?: string | null
+          ref_id?: string | null
           status?: string
           total_amount: number
           user_id?: string | null
@@ -144,6 +146,7 @@ export type Database = {
           id?: string
           order_code?: string | null
           pickup_time?: string | null
+          ref_id?: string | null
           status?: string
           total_amount?: number
           user_id?: string | null

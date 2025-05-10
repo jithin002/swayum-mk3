@@ -32,7 +32,7 @@ const FloatingAddToCart: React.FC<FloatingAddToCartProps> = ({
   
   return (
     <div 
-      className={`fixed bottom-16 left-0 right-0 mx-auto px-4 z-20 transition-all duration-500 ease-out ${
+      className={`fixed bottom-16 left-0 right-0 mx-auto px-4 z-50 transition-all duration-500 ease-out ${
         isVisible ? 'opacity-100' : 'opacity-0'
       } ${isAnimating ? 'transform-none' : 'translate-y-20'}`}
     >

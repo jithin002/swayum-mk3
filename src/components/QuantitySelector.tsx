@@ -1,11 +1,12 @@
 
 import React from "react";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Trash2 } from "lucide-react";
 
 interface QuantitySelectorProps {
   quantity: number;
   onIncrease: () => void;
   onDecrease: () => void;
+  onRemove?: () => void;
   maxQuantity?: number;
 }
 
@@ -13,17 +14,17 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   quantity, 
   onIncrease, 
   onDecrease,
+  onRemove,
   maxQuantity = 4
 }) => {
   return (
     <div className="quantity-control">
       <button 
-        className="quantity-btn" 
-        onClick={onDecrease}
-        disabled={quantity <= 1}
-        aria-label="Decrease quantity"
+        className="quantity-btn text-red-500"
+        onClick={quantity === 1 ? onRemove : onDecrease}
+        aria-label={quantity === 1 ? "Remove item" : "Decrease quantity"}
       >
-        <Minus size={16} />
+        {quantity === 1 ? <Trash2 size={16} /> : <Minus size={16} />}
       </button>
       <div className="quantity-display">
         <span>{quantity}</span>

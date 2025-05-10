@@ -6,7 +6,7 @@ import { useOrder } from "@/context/OrderContext";
 import QuantitySelector from "@/components/QuantitySelector";
 import { formatTimeSlot } from "@/services/timeSlotService";
 import { toast } from "sonner";
-import { ShoppingCart, ArrowRight, CreditCard } from "lucide-react";
+import { ShoppingCart, CreditCard } from "lucide-react";
 
 const CartPage: React.FC = () => {
   const { cartItems, removeFromCart, updateItemQuantity, getCartTotal, clearCart } = useCart();
@@ -56,7 +56,7 @@ const CartPage: React.FC = () => {
   }, {} as Record<string, typeof cartItems>);
 
   return (
-    <div className="min-h-screen flex flex-col pb-24">
+    <div className="min-h-screen flex flex-col pb-32">
       <div className="swayum-header">
         <Link to="/menu" className="text-white">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -101,21 +101,14 @@ const CartPage: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div>
-                        <div className="mb-2 max-w-[100px]">
-                          <QuantitySelector
-                            quantity={item.quantity}
-                            maxQuantity={item.maxQuantity}
-                            onIncrease={() => updateItemQuantity(item.id, item.quantity + 1)}
-                            onDecrease={() => updateItemQuantity(item.id, item.quantity - 1)}
-                          />
-                        </div>
-                        <button 
-                          className="text-red-500 text-sm hover:underline"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          Remove
-                        </button>
+                      <div className="max-w-[100px]">
+                        <QuantitySelector
+                          quantity={item.quantity}
+                          maxQuantity={item.maxQuantity}
+                          onIncrease={() => updateItemQuantity(item.id, item.quantity + 1)}
+                          onDecrease={() => updateItemQuantity(item.id, item.quantity - 1)}
+                          onRemove={() => removeFromCart(item.id)}
+                        />
                       </div>
                     </div>
                   ))}
@@ -138,7 +131,7 @@ const CartPage: React.FC = () => {
         )}
       </main>
       
-      <div className="fixed bottom-16 left-0 right-0 bg-white border-t p-4">
+      <div className="fixed bottom-16 left-0 right-0 bg-white border-t p-4 z-40">
         <button 
           className={`w-full py-3 px-4 rounded-lg font-semibold flex items-center justify-center ${
             cartItems.length === 0 || isProcessing 

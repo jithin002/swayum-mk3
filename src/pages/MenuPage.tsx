@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -6,9 +7,11 @@ import MenuItemCard from "@/components/MenuItemCard";
 import { getMenuItems } from "@/services/menuService";
 import { MenuItem } from "@/types";
 import { toast } from "sonner";
+
 const MenuPage: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     const loadMenuItems = async () => {
       try {
@@ -22,9 +25,12 @@ const MenuPage: React.FC = () => {
         setLoading(false);
       }
     };
+
     loadMenuItems();
   }, []);
-  return <div className="min-h-screen flex flex-col">
+
+  return (
+    <div className="min-h-screen flex flex-col">
       <div className="swayum-header">
         <Link to="/" className="text-white">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -36,14 +42,22 @@ const MenuPage: React.FC = () => {
       </div>
       
       <main className="flex-1 p-4 mb-16 bg-orange-50">
-        {loading ? <div className="flex justify-center items-center h-40">
+        {loading ? (
+          <div className="flex justify-center items-center h-40">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-swayum-orange"></div>
-          </div> : <div className="space-y-4">
-            {menuItems.map(item => <MenuItemCard key={item.id} item={item} />)}
-          </div>}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {menuItems.map(item => (
+              <MenuItemCard key={item.id} item={item} />
+            ))}
+          </div>
+        )}
       </main>
       
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default MenuPage;

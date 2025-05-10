@@ -57,7 +57,7 @@ const OrderConfirmation: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pb-20">
+    <div className="min-h-screen flex flex-col pb-24">
       <OrderHeader />
       
       <main className="flex-1 p-4">

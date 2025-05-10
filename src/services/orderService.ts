@@ -19,7 +19,13 @@ export const createOrderInDB = async (
     // Create a random 4-digit order code
     const orderCode = Math.floor(1000 + Math.random() * 9000).toString();
     
-    // Insert the order with a shorter, simpler ID format
+    // Current date to format the order ID (YYMMDD format)
+    const today = new Date();
+    const dateStr = today.getFullYear().toString().substr(-2) + 
+                   (today.getMonth() + 1).toString().padStart(2, '0') + 
+                   today.getDate().toString().padStart(2, '0');
+    
+    // Insert the order with a ref_id field that contains the formatted date
     const { data: orderData, error: orderError } = await supabase
       .from('orders')
       .insert({
@@ -27,9 +33,10 @@ export const createOrderInDB = async (
         total_amount: totalAmount,
         status: 'pending',
         pickup_time: pickupTime,
-        order_code: orderCode
+        order_code: orderCode,
+        ref_id: `${dateStr}` // Store date part in the database
       })
-      .select('id')
+      .select('id, ref_id')
       .single();
       
     if (orderError || !orderData) {
@@ -37,8 +44,8 @@ export const createOrderInDB = async (
       return null;
     }
     
-    // Create a shorter, more user-friendly order ID format
-    const shortOrderId = `SW-${orderData.id.substring(0, 4)}`;
+    // Create a formatted order ID with SW prefix and date
+    const shortOrderId = `SW-${orderData.ref_id}-${orderData.id.substring(0, 4)}`;
     
     // Insert order items
     const orderItems = cartItems.map(item => ({

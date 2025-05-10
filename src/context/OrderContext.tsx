@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Order, CartItem, OrderStatus } from "@/types";
 import { format } from "date-fns";
@@ -55,8 +54,14 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
         }
         orderId = dbOrderId;
       } else {
-        // Fallback to local storage if not logged in - Create a simpler order ID format
-        orderId = `SW-${Math.floor(1000 + Math.random() * 9000)}`;
+        // Fallback to local storage if not logged in
+        // Create a date-based order ID format (SW-YYMMDD-XXXX)
+        const today = new Date();
+        const dateStr = today.getFullYear().toString().substr(-2) + 
+                       (today.getMonth() + 1).toString().padStart(2, '0') + 
+                       today.getDate().toString().padStart(2, '0');
+        const randomId = Math.floor(1000 + Math.random() * 9000).toString();
+        orderId = `SW-${dateStr}-${randomId}`;
       }
       
       const newOrder: Order = {

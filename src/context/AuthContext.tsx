@@ -26,20 +26,30 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener first
+    console.log("Auth provider mounted");
+    
+    // First set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
       console.log("Auth state changed:", event);
       setSession(newSession);
       setUser(newSession?.user ?? null);
-      setLoading(false);
     });
 
     // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      setLoading(false);
-    });
+    const checkSession = async () => {
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        console.log("Current session:", currentSession ? "exists" : "none");
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+      } catch (error) {
+        console.error("Error checking session:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    checkSession();
 
     return () => {
       subscription.unsubscribe();
@@ -89,6 +99,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       setLoading(true);
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      toast.success("Signed out successfully");
     } catch (error: any) {
       toast.error(error.message || "Error signing out");
       console.error("Error signing out:", error);

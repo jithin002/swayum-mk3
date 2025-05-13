@@ -30,6 +30,7 @@ export interface OrderStatus {
 
 export interface Order {
   id: string;
+  refId?: string;
   items: CartItem[];
   totalAmount: number;
   orderDate: string;

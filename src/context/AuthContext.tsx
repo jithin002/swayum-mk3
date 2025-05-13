@@ -4,11 +4,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 import { toast } from "sonner";
 
+interface ProfileData {
+  name?: string;
+  customerType?: 'student' | 'teacher' | 'other';
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, profileData: ProfileData) => Promise<void>;
   signOut: () => Promise<void>;
   loading: boolean;
 }
@@ -54,11 +59,22 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     }
   };
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, profileData: ProfileData) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          data: {
+            name: profileData.name,
+            customer_type: profileData.customerType
+          }
+        } 
+      });
+      
       if (error) throw error;
+      
       toast.success("Sign up successful! Please check your email to verify your account.");
     } catch (error: any) {
       toast.error(error.message || "Error signing up");

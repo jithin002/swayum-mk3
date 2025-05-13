@@ -5,10 +5,14 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 const AuthPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [customerType, setCustomerType] = useState<'student' | 'teacher' | 'other'>('student');
   const [tab, setTab] = useState("login");
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +28,7 @@ const AuthPage: React.FC = () => {
     if (tab === "login") {
       await signIn(email, password);
     } else {
-      await signUp(email, password);
+      await signUp(email, password, { name, customerType });
     }
   };
 
@@ -64,9 +68,9 @@ const AuthPage: React.FC = () => {
             <TabsContent value="login">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                     Email
-                  </label>
+                  </Label>
                   <Input
                     id="email"
                     type="email"
@@ -78,9 +82,9 @@ const AuthPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                     Password
-                  </label>
+                  </Label>
                   <Input
                     id="password"
                     type="password"
@@ -104,9 +108,42 @@ const AuthPage: React.FC = () => {
             <TabsContent value="signup">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label htmlFor="signup-name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name
+                  </Label>
+                  <Input
+                    id="signup-name"
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="signup-customer-type" className="block text-sm font-medium text-gray-700 mb-1">
+                    I am a:
+                  </Label>
+                  <Select
+                    value={customerType}
+                    onValueChange={(value) => setCustomerType(value as 'student' | 'teacher' | 'other')}
+                  >
+                    <SelectTrigger id="signup-customer-type">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">Student</SelectItem>
+                      <SelectItem value="teacher">Teacher</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="signup-email" className="block text-sm font-medium text-gray-700 mb-1">
                     Email
-                  </label>
+                  </Label>
                   <Input
                     id="signup-email"
                     type="email"
@@ -118,9 +155,9 @@ const AuthPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-1">
+                  <Label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 mb-1">
                     Password
-                  </label>
+                  </Label>
                   <Input
                     id="signup-password"
                     type="password"

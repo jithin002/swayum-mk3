@@ -2,6 +2,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Order, CartItem } from "@/types";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from 'uuid';
 
 // Function to create an order in Supabase
 export const createOrderInDB = async (
@@ -19,13 +20,18 @@ export const createOrderInDB = async (
     // Create a random 4-digit order code
     const orderCode = Math.floor(1000 + Math.random() * 9000).toString();
     
-    // Current date to format the order ID (YYMMDD format)
+    // Generate a unique ref_id with SY prefix
+    // Format: SY-YYMMDD-XXXX where XXXX is a random string
     const today = new Date();
     const dateStr = today.getFullYear().toString().substr(-2) + 
                    (today.getMonth() + 1).toString().padStart(2, '0') + 
                    today.getDate().toString().padStart(2, '0');
     
-    // Insert the order with a ref_id field that contains the formatted date
+    // Add a short random string for uniqueness
+    const shortUuid = uuidv4().substring(0, 4);
+    const refId = `SY-${dateStr}-${shortUuid}`;
+    
+    // Insert the order with a unique ref_id
     const { data, error } = await supabase
       .from('orders')
       .insert({
@@ -34,18 +40,15 @@ export const createOrderInDB = async (
         status: 'pending',
         pickup_time: pickupTime,
         order_code: orderCode,
-        ref_id: dateStr // Store date part in the database
+        ref_id: refId
       })
-      .select('id, ref_id')
+      .select('id')
       .single();
       
     if (error || !data) {
       console.error("Failed to create order:", error);
       return null;
     }
-    
-    // Create a formatted order ID with SW prefix and date
-    const shortOrderId = `SW-${data.ref_id}-${data.id.substring(0, 4)}`;
     
     // Insert order items
     const orderItems = cartItems.map(item => ({
@@ -65,7 +68,7 @@ export const createOrderInDB = async (
       return null;
     }
     
-    return shortOrderId;
+    return refId;
   } catch (error) {
     console.error("Error creating order:", error);
     return null;

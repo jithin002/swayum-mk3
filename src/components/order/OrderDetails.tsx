@@ -40,9 +40,16 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onCollectOrder }) =>
       </div>
       
       <div className="flex justify-between items-center mb-3">
-        <span className="text-gray-500">Order Number</span>
+        <span className="text-gray-500">Order Reference</span>
         <span className="font-medium">{order.id}</span>
       </div>
+
+      {order.refId && (
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-gray-500">Order ID</span>
+          <span className="font-medium text-swayum-orange">{order.refId}</span>
+        </div>
+      )}
       
       <div className="flex justify-between items-center mb-3">
         <span className="text-gray-500">Date</span>
@@ -74,7 +81,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order, onCollectOrder }) =>
                 {isSubmitting ? "Verifying..." : "Collect"}
               </Button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">Enter code "1234" to test the collection feature</p>
+            <p className="text-xs text-gray-500 mt-2">Enter the collection code shown to the customer</p>
           </form>
         </div>
       )}

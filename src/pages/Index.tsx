@@ -13,7 +13,7 @@ const Index: React.FC = () => {
           <ImageCarousel />
           
           <h1 className="text-4xl font-bold mb-2 mt-6">Welcome, User!</h1>
-          <p className="text-xl text-gray-600">What would you like to explore today?</p>
+          <p className="text-xl text-gray-600">Skip waiting in lines, not meals!!!</p>
         </div>
         
         <div className="space-y-4 mb-12">

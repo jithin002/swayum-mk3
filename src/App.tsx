@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import MenuPage from "./pages/MenuPage";
 import MenuItemDetail from "./pages/MenuItemDetail";
 import CartPage from "./pages/CartPage";
+import PaymentGateway from "./pages/PaymentGateway"; // Add this new import
 import OrderConfirmation from "./pages/OrderConfirmation";
 import AuthPage from "./pages/AuthPage";
 import { CartProvider } from "./context/CartContext";
@@ -35,6 +36,8 @@ const App = () => {
                   <Route path="/menu" element={<MenuPage />} />
                   <Route path="/menu/:id" element={<MenuItemDetail />} />
                   <Route path="/cart" element={<CartPage />} />
+                  <Route path="/payment" element={<CartPage />} />
+                  <Route path="/payment-gateway" element={<PaymentGateway />} /> {/* Add this new route */}
                   <Route path="/auth" element={<AuthPage />} />
                   <Route 
                     path="/order-confirmation/:id" 

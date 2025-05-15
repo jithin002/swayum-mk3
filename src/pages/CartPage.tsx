@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
@@ -10,41 +9,16 @@ import { ShoppingCart, CreditCard } from "lucide-react";
 
 const CartPage: React.FC = () => {
   const { cartItems, removeFromCart, updateItemQuantity, getCartTotal, clearCart } = useCart();
-  const { createOrder } = useOrder();
   const navigate = useNavigate();
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
       return;
     }
 
-    setIsProcessing(true);
-    
-    try {
-      // Simulate payment processing
-      setTimeout(async () => {
-        const pickupTime = cartItems[0].pickupTime;
-        const totalAmount = getCartTotal();
-        
-        // Await the order creation to get the order object
-        const order = await createOrder(cartItems, totalAmount, pickupTime);
-        
-        if (order) {
-          clearCart();
-          navigate(`/order-confirmation/${order.id}`);
-        } else {
-          toast.error("Failed to create order");
-        }
-        
-        setIsProcessing(false);
-      }, 1500);
-    } catch (error) {
-      console.error("Error during checkout:", error);
-      toast.error("Checkout failed. Please try again.");
-      setIsProcessing(false);
-    }
+    // Navigate to payment gateway with cart data
+    navigate('/payment-gateway');
   };
 
   const groupedItems = cartItems.reduce((acc, item) => {
@@ -134,24 +108,15 @@ const CartPage: React.FC = () => {
       <div className="fixed bottom-16 left-0 right-0 bg-white border-t p-4 z-40">
         <button 
           className={`w-full py-3 px-4 rounded-lg font-semibold flex items-center justify-center ${
-            cartItems.length === 0 || isProcessing 
+            cartItems.length === 0 
               ? 'bg-gray-300 text-gray-500' 
               : 'bg-swayum-orange text-white'
           }`}
           onClick={handleCheckout}
-          disabled={cartItems.length === 0 || isProcessing}
+          disabled={cartItems.length === 0}
         >
-          {isProcessing ? (
-            <>
-              <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-              Processing...
-            </>
-          ) : (
-            <>
-              <CreditCard className="mr-2" size={18} />
-              {`Checkout • ₹${getCartTotal()}`}
-            </>
-          )}
+          <CreditCard className="mr-2" size={18} />
+          {`Proceed to Payment • ₹${getCartTotal()}`}
         </button>
       </div>
     </div>

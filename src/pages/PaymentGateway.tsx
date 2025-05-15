@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
@@ -10,12 +9,14 @@ import { toast } from "sonner";
 import { CreditCard, IndianRupee, ArrowLeft, Check } from "lucide-react";
 import CardPaymentForm from "@/components/payment/CardPaymentForm";
 import UpiPaymentForm from "@/components/payment/UpiPaymentForm";
+import { useAuth } from "@/context/AuthContext";
 
 type PaymentMethod = "card" | "upi";
 
 const PaymentGateway: React.FC = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { createOrder } = useOrder();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -88,6 +89,8 @@ const PaymentGateway: React.FC = () => {
           
           if (order) {
             clearCart();
+            // Ensure we're authenticated and have the correct order ID
+            console.log("Payment successful, redirecting to order confirmation with ID:", order.id);
             navigate(`/order-confirmation/${order.id}`);
           } else {
             toast.error("Failed to create order");

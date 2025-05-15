@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,12 +15,17 @@ const AuthPage: React.FC = () => {
   const [tab, setTab] = useState("login");
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get the return path from location state, defaulting to "/"
+  const returnTo = location.state?.returnTo || "/";
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      console.log("User authenticated, redirecting to:", returnTo);
+      navigate(returnTo);
     }
-  }, [user, navigate]);
+  }, [user, navigate, returnTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

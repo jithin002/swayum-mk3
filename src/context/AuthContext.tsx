@@ -33,14 +33,6 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       console.log("Auth state changed:", event);
       setSession(newSession);
       setUser(newSession?.user ?? null);
-      
-      // If this is a sign-up event, update the users table with name
-      if (event === 'SIGNED_IN' && newSession?.user) {
-        // Use setTimeout to avoid Supabase auth deadlock
-        setTimeout(() => {
-          updateUserProfile(newSession.user);
-        }, 0);
-      }
     });
 
     // Then check for existing session
@@ -64,32 +56,6 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     };
   }, []);
 
-  // Function to update user profile in the users table
-  const updateUserProfile = async (user: User) => {
-    try {
-      // Check if user has metadata with name
-      const name = user.user_metadata?.name;
-      
-      if (name) {
-        const { error } = await supabase
-          .from('users')
-          .upsert({ 
-            id: user.id,
-            name: name,
-            email: user.email
-          }, { onConflict: 'id' });
-          
-        if (error) {
-          console.error("Error updating user profile:", error);
-        } else {
-          console.log("User profile updated with name:", name);
-        }
-      }
-    } catch (error) {
-      console.error("Error in update user profile:", error);
-    }
-  };
-
   const signIn = async (email: string, password: string) => {
     try {
       setLoading(true);
@@ -106,8 +72,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const signUp = async (email: string, password: string, profileData: ProfileData) => {
     try {
       setLoading(true);
-      // Include the name in the user_metadata
-      const { error, data } = await supabase.auth.signUp({ 
+      const { error } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
@@ -119,11 +84,6 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       });
       
       if (error) throw error;
-      
-      if (data.user) {
-        // Update the users table immediately
-        await updateUserProfile(data.user);
-      }
       
       toast.success("Sign up successful! Please check your email to verify your account.");
     } catch (error: any) {

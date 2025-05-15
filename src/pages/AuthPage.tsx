@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,23 +16,15 @@ const AuthPage: React.FC = () => {
   const [tab, setTab] = useState("login");
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  // Get the return path from location state, defaulting to "/"
-  const returnTo = location.state?.returnTo || "/";
 
   useEffect(() => {
-    console.log("AuthPage - User auth state:", { user: !!user, loading, returnTo });
     if (user) {
-      console.log("User authenticated, redirecting to:", returnTo);
-      navigate(returnTo, { replace: true });
+      navigate("/");
     }
-  }, [user, navigate, returnTo]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(`Attempting ${tab === "login" ? "login" : "signup"} with email:`, email);
-    
     if (tab === "login") {
       await signIn(email, password);
     } else {

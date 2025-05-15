@@ -31,7 +31,7 @@ export const createOrderInDB = async (
     const shortUuid = uuidv4().substring(0, 4);
     const refId = `SY-${dateStr}-${shortUuid}`;
     
-    // Insert the order with a unique ref_id and include itemName and quantity
+    // Insert the order with a unique ref_id
     const { data, error } = await supabase
       .from('orders')
       .insert({
@@ -208,16 +208,7 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
     
     const { data: ordersData, error: ordersError } = await supabase
       .from('orders')
-      .select(`
-        id, 
-        ref_id,
-        total_amount, 
-        created_at, 
-        status, 
-        pickup_time, 
-        order_code,
-        collected
-      `)
+      .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
       
@@ -226,46 +217,21 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
       return [];
     }
     
-    const orders: Order[] = [];
-    
-    // For each order, fetch its items
-    for (const order of ordersData) {
-      const { data: itemsData, error: itemsError } = await supabase
-        .from('order_items')
-        .select('*')
-        .eq('order_id', order.id);
-        
-      if (itemsError) {
-        console.error(`Failed to fetch items for order ${order.id}:`, itemsError);
-        continue;
-      }
-      
-      orders.push({
-        id: order.ref_id || order.id,
-        items: itemsData ? itemsData.map(item => ({
-          id: item.item_id?.toString() || "",
-          name: item.item_name,
-          price: Number(item.price),
-          quantity: item.quantity,
-          description: "",
-          image: "/placeholder.svg",
-          category: "",
-          isVegetarian: false,
-          available: true,
-          maxQuantity: 4
-        })) : [],
-        totalAmount: Number(order.total_amount),
-        orderDate: new Date(order.created_at).toLocaleDateString(),
-        pickupTime: order.pickup_time || "",
-        status: {
-          received: true,
-          preparation: order.status === 'preparing' || order.status === 'ready' || order.status === 'completed',
-          readyForPickup: order.status === 'ready' || order.status === 'completed',
-          completed: order.status === 'completed' || order.collected,
-        },
-        orderCode: order.order_code || ""
-      });
-    }
+    // Transform to our Order type (without items for now - can be loaded on demand)
+    const orders: Order[] = ordersData.map(order => ({
+      id: order.id,
+      items: [], // Items will be loaded on demand when needed
+      totalAmount: Number(order.total_amount),
+      orderDate: new Date(order.created_at).toLocaleDateString(),
+      pickupTime: order.pickup_time || "",
+      status: {
+        received: true,
+        preparation: order.status === 'preparing' || order.status === 'ready' || order.status === 'completed',
+        readyForPickup: order.status === 'ready' || order.status === 'completed',
+        completed: order.status === 'completed' || order.collected,
+      },
+      orderCode: order.order_code || ""
+    }));
     
     return orders;
   } catch (error) {

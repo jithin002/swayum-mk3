@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 interface PrivateRouteProps {
@@ -9,7 +9,6 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
-  const location = useLocation();
 
   if (loading) {
     return (
@@ -20,8 +19,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   }
 
   if (!user) {
-    // Store the current path so we can redirect back after login
-    return <Navigate to="/auth" state={{ returnTo: location.pathname }} replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   return <>{children}</>;

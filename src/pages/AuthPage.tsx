@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -21,14 +22,17 @@ const AuthPage: React.FC = () => {
   const returnTo = location.state?.returnTo || "/";
 
   useEffect(() => {
+    console.log("AuthPage - User auth state:", { user: !!user, loading, returnTo });
     if (user) {
       console.log("User authenticated, redirecting to:", returnTo);
-      navigate(returnTo);
+      navigate(returnTo, { replace: true });
     }
   }, [user, navigate, returnTo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(`Attempting ${tab === "login" ? "login" : "signup"} with email:`, email);
+    
     if (tab === "login") {
       await signIn(email, password);
     } else {

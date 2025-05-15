@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -52,7 +53,6 @@ const Index: React.FC = () => {
               </div>
               <div className="flex items-center text-gray-400">
                 <ExternalLink className="h-5 w-5 mr-1" />
-                
               </div>
             </div>
           </a>

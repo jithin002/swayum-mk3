@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Order, CartItem } from "@/types";
 import { toast } from "sonner";
@@ -110,7 +109,6 @@ export const getOrderById = async (orderId: string): Promise<Order | null> => {
         price: Number(item.price),
         quantity: item.quantity,
         pickupTime: orderData.pickup_time || "",
-        // Add default values for other required MenuItem properties
         description: "",
         image: "/placeholder.svg",
         category: "",

@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ImageCarousel from "@/components/ImageCarousel";
 import { QrCode, Bell, ShoppingCart } from "lucide-react";
+
 const Index: React.FC = () => {
   return <div className="min-h-screen flex flex-col">
       <Header />
@@ -36,7 +37,7 @@ const Index: React.FC = () => {
             </div>
           </Link>
           
-          <Link to="/locations" className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <a href="https://maps.app.goo.gl/a9kg77ZJftj3V8Z18" target="_blank" rel="noopener noreferrer" className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="bg-orange-100 p-2 rounded-full">
@@ -54,7 +55,7 @@ const Index: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-          </Link>
+          </a>
           
           <Link to="/auth" className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">

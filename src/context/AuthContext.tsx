@@ -61,6 +61,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      
+      // Success toast
+      toast.success("Signed in successfully");
     } catch (error: any) {
       toast.error(error.message || "Error signing in");
       console.error("Error signing in:", error);
@@ -72,7 +75,8 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const signUp = async (email: string, password: string, profileData: ProfileData) => {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({ 
+      // First sign up the user
+      const { error, data } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
@@ -84,6 +88,21 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       });
       
       if (error) throw error;
+      
+      // Then store the name in the users table
+      if (data.user) {
+        const { error: userError } = await supabase
+          .from('users')
+          .upsert({ 
+            id: data.user.id, 
+            email: email,
+            name: profileData.name 
+          });
+        
+        if (userError) {
+          console.error("Error storing user profile:", userError);
+        }
+      }
       
       toast.success("Sign up successful! Please check your email to verify your account.");
     } catch (error: any) {

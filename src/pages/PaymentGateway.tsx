@@ -1,11 +1,11 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
+import { useAuth } from "@/context/AuthContext";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { CreditCard, IndianRupee, ArrowLeft, Check } from "lucide-react";
 import CardPaymentForm from "@/components/payment/CardPaymentForm";
@@ -16,6 +16,7 @@ type PaymentMethod = "card" | "upi";
 const PaymentGateway: React.FC = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { createOrder } = useOrder();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -31,8 +32,16 @@ const PaymentGateway: React.FC = () => {
   
   const [upiId, setUpiId] = useState("");
   
+  // Check if user is authenticated
+  useEffect(() => {
+    if (!user) {
+      console.log("User not authenticated, redirecting to auth page");
+      navigate("/auth", { state: { returnTo: "/payment-gateway" } });
+    }
+  }, [user, navigate]);
+  
   // If cart is empty, redirect to cart page
-  React.useEffect(() => {
+  useEffect(() => {
     if (cartItems.length === 0) {
       navigate("/cart");
     }
@@ -87,9 +96,11 @@ const PaymentGateway: React.FC = () => {
           const order = await createOrder(cartItems, totalAmount, pickupTime);
           
           if (order) {
+            console.log("Order created successfully:", order);
             clearCart();
             navigate(`/order-confirmation/${order.id}`);
           } else {
+            console.error("Failed to create order, order is null");
             toast.error("Failed to create order");
             navigate("/cart");
           }

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -37,12 +36,7 @@ const Index: React.FC = () => {
             </div>
           </Link>
           
-          <a 
-            href="https://maps.app.goo.gl/a9kg77ZJftj3V8Z18" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          >
+          <a href="https://maps.app.goo.gl/a9kg77ZJftj3V8Z18" target="_blank" rel="noopener noreferrer" className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="bg-orange-100 p-2 rounded-full">
@@ -58,9 +52,7 @@ const Index: React.FC = () => {
               </div>
               <div className="flex items-center text-gray-400">
                 <ExternalLink className="h-5 w-5 mr-1" />
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                
               </div>
             </div>
           </a>

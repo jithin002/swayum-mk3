@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
-import { useAuth } from "@/context/AuthContext";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -16,7 +15,6 @@ type PaymentMethod = "card" | "upi";
 const PaymentGateway: React.FC = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { createOrder } = useOrder();
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -31,8 +29,8 @@ const PaymentGateway: React.FC = () => {
   });
   
   const [upiId, setUpiId] = useState("");
-  
-  // If cart is empty, redirect to cart page
+
+  // Protect against empty cart - redirect if no items
   if (cartItems.length === 0 && !isProcessing && !isPaymentSuccessful) {
     navigate("/cart");
     return null;
@@ -64,8 +62,10 @@ const PaymentGateway: React.FC = () => {
 
     setIsProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
       setIsProcessing(false);
       setIsPaymentSuccessful(true);
       
@@ -101,7 +101,11 @@ const PaymentGateway: React.FC = () => {
           navigate("/cart");
         }
       }, 1500);
-    }, 2000);
+    } catch (error) {
+      setIsProcessing(false);
+      console.error("Payment processing error:", error);
+      toast.error("Payment failed. Please try again.");
+    }
   };
 
   const handleGoBack = () => {

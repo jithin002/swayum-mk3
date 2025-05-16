@@ -122,6 +122,7 @@ export type Database = {
           collected: boolean | null
           created_at: string | null
           id: string
+          item_name: string | null
           order_code: string | null
           pickup_time: string | null
           ref_id: string | null
@@ -133,6 +134,7 @@ export type Database = {
           collected?: boolean | null
           created_at?: string | null
           id?: string
+          item_name?: string | null
           order_code?: string | null
           pickup_time?: string | null
           ref_id?: string | null
@@ -144,6 +146,7 @@ export type Database = {
           collected?: boolean | null
           created_at?: string | null
           id?: string
+          item_name?: string | null
           order_code?: string | null
           pickup_time?: string | null
           ref_id?: string | null

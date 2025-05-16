@@ -75,7 +75,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const signUp = async (email: string, password: string, profileData: ProfileData) => {
     try {
       setLoading(true);
-      // First sign up the user
+      // Sign up the user with metadata
       const { error, data } = await supabase.auth.signUp({ 
         email, 
         password,
@@ -88,21 +88,6 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       });
       
       if (error) throw error;
-      
-      // Then store the name in the users table
-      if (data.user) {
-        const { error: userError } = await supabase
-          .from('users')
-          .upsert({ 
-            id: data.user.id, 
-            email: email,
-            name: profileData.name 
-          });
-        
-        if (userError) {
-          console.error("Error storing user profile:", userError);
-        }
-      }
       
       toast.success("Sign up successful! Please check your email to verify your account.");
     } catch (error: any) {

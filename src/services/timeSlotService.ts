@@ -1,54 +1,40 @@
 
 import { TimeSlot } from "@/types";
-import { format, addMinutes, parse, isAfter } from "date-fns";
-import { v4 as uuidv4 } from "uuid";
+import { format, parse, addMinutes } from "date-fns";
 
-// Function to generate time slots for pickup
-export const generateTimeSlots = (startTime: string = "11:00", endTime: string = "20:00", intervalMinutes: number = 30): TimeSlot[] => {
-  const timeSlots: TimeSlot[] = [];
+// Generate time slots with 15-minute intervals within a 2-hour window
+export const generateTimeSlots = (): TimeSlot[] => {
   const now = new Date();
+  const slots: TimeSlot[] = [];
   
-  // Parse the start and end times
-  const startDate = parse(startTime, "HH:mm", new Date());
-  const endDate = parse(endTime, "HH:mm", new Date());
+  // Round current time to next 15 min interval
+  const minutes = now.getMinutes();
+  const remainder = minutes % 15;
+  const roundedMinutes = remainder === 0 ? minutes : minutes + (15 - remainder);
   
-  let currentTime = startDate;
+  const startTime = new Date(now);
+  startTime.setMinutes(roundedMinutes, 0, 0);
   
-  while (currentTime <= endDate) {
-    const timeString = format(currentTime, "HH:mm");
-    const slotDate = parse(timeString, "HH:mm", now);
-    
-    // Set availability based on whether the slot is in the future
-    const isAvailable = isAfter(slotDate, now);
-    
-    timeSlots.push({
-      id: uuidv4(),
-      time: timeString,
-      available: isAvailable
+  // Generate slots for 2 hours (8 slots of 15 minutes)
+  for (let i = 0; i < 8; i++) {
+    const slotTime = addMinutes(startTime, i * 15);
+    slots.push({
+      time: format(slotTime, "h:mm a"),
+      available: true
     });
-    
-    currentTime = addMinutes(currentTime, intervalMinutes);
   }
   
-  return timeSlots;
+  return slots;
 };
 
-// Function to format a time slot for display
-export const formatTimeSlot = (timeString: string): string => {
+// Format time slots for display
+export const formatTimeSlot = (timeSlot: string): string => {
   try {
-    // If the timeString is in 24-hour format (e.g., "14:30"), convert it to 12-hour format
-    const [hours, minutes] = timeString.split(':').map(Number);
-    
-    if (isNaN(hours) || isNaN(minutes)) {
-      return timeString; // Return original if parsing fails
-    }
-    
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
-    
-    return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+    // Try to parse and format the time
+    const parsedTime = parse(timeSlot, "h:mm a", new Date());
+    return format(parsedTime, "h:mm a");
   } catch (error) {
-    console.error("Error formatting time slot:", error);
-    return timeString; // Return original if any error occurs
+    // If parsing fails, return the original string
+    return timeSlot;
   }
 };

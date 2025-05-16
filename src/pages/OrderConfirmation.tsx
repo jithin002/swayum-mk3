@@ -29,9 +29,8 @@ const OrderConfirmation: React.FC = () => {
     const fetchOrder = async () => {
       try {
         setLoading(true);
-        
-        // Try to find order by id first
-        let { data, error } = await supabase
+        // Fetch order data from Supabase where ref_id matches the id parameter
+        const { data, error } = await supabase
           .from('orders')
           .select(`
             id, 
@@ -42,46 +41,21 @@ const OrderConfirmation: React.FC = () => {
             pickup_time, 
             order_code,
             collected,
-            item_name,
             order_items(*)
           `)
-          .eq('id', id)
+          .eq('ref_id', id)
           .single();
 
-        // If not found, try by ref_id
         if (error || !data) {
-          const { data: refData, error: refError } = await supabase
-            .from('orders')
-            .select(`
-              id, 
-              ref_id, 
-              total_amount, 
-              created_at, 
-              status, 
-              pickup_time, 
-              order_code,
-              collected,
-              item_name,
-              order_items(*)
-            `)
-            .eq('ref_id', id)
-            .single();
-            
-          if (refError || !refData) {
-            console.error("Error fetching order:", error, refError);
-            toast.error("Could not find your order. Redirecting to menu.");
-            setTimeout(() => navigate("/menu"), 2000);
-            return;
-          }
-          
-          data = refData;
+          console.error("Error fetching order:", error);
+          toast.error("Could not find your order. Redirecting to menu.");
+          setTimeout(() => navigate("/menu"), 2000);
+          return;
         }
-
-        console.log("Fetched order data:", data);
 
         // Transform the data to match our Order type
         const formattedOrder = {
-          id: data.id,
+          id: data.ref_id,
           refId: data.ref_id,
           internalId: data.id,
           items: data.order_items ? data.order_items.map((item: any) => ({
@@ -90,9 +64,9 @@ const OrderConfirmation: React.FC = () => {
             price: Number(item.price),
             quantity: item.quantity,
             description: "",
-            image_url: "/placeholder.svg",
+            image: "/placeholder.svg",
             category: "",
-            is_vegetarian: false,
+            isVegetarian: false,
             available: true,
             maxQuantity: 4
           })) : [],
@@ -153,7 +127,6 @@ const OrderConfirmation: React.FC = () => {
           pickup_time, 
           order_code,
           collected,
-          item_name,
           order_items(*)
         `)
         .eq('id', orderId)
@@ -238,7 +211,7 @@ const OrderConfirmation: React.FC = () => {
       <OrderHeader />
       
       <main className="flex-1 p-4">
-        <OrderConfirmationBanner orderId={order.refId || order.id} />
+        <OrderConfirmationBanner orderId={order.id} />
         <OrderDetails order={order} onCollectOrder={handleCollectOrder} />
         <OrderTracking status={order.status} />
         <OrderItems items={order.items} totalAmount={order.totalAmount} />

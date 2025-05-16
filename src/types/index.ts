@@ -1,20 +1,24 @@
 
+export interface MenuItem {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  image: string;
+  category: string;
+  isVegetarian: boolean;
+  available: boolean;
+  maxQuantity: number;
+}
+
 export interface CartItem extends MenuItem {
   quantity: number;
   pickupTime: string;
 }
 
-export interface Order {
-  id: string;
-  refId?: string;
-  internalId?: string;
-  items: CartItem[];
-  totalAmount: number;
-  orderDate: string;
-  pickupTime: string;
-  status: OrderStatus;
-  orderCode: string;
-  itemName?: string;
+export interface TimeSlot {
+  time: string;
+  available: boolean;
 }
 
 export interface OrderStatus {
@@ -24,27 +28,20 @@ export interface OrderStatus {
   completed: boolean;
 }
 
-export interface TimeSlot {
+export interface Order {
   id: string;
-  time: string;
-  available: boolean;
+  refId?: string;
+  items: CartItem[];
+  totalAmount: number;
+  orderDate: string;
+  pickupTime: string;
+  status: OrderStatus;
+  orderCode?: string;
 }
 
-export interface MenuItem {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image_url: string;
-  image?: string; // Added for backward compatibility
-  category: string;
-  is_vegetarian: boolean;
-  isVegetarian?: boolean; // Added for backward compatibility
-  available: boolean;
-  maxQuantity?: number;
-}
-
-export interface ProfileData {
-  name?: string;
-  customerType?: 'student' | 'teacher' | 'other';
+export interface PaymentInfo {
+  cardNumber: string;
+  cardHolder: string;
+  expiryDate: string;
+  cvv: string;
 }

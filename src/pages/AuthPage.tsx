@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,20 +16,12 @@ const AuthPage: React.FC = () => {
   const [tab, setTab] = useState("login");
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [redirectAttempted, setRedirectAttempted] = useState(false);
-  
-  // Get the return URL from location state, or default to home
-  const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
-    if (user && !redirectAttempted) {
-      console.log("User authenticated, redirecting to:", from);
-      setRedirectAttempted(true);
-      // Navigate to the return URL if available, otherwise go to home
-      navigate(from, { replace: true });
+    if (user) {
+      navigate("/");
     }
-  }, [user, navigate, from, redirectAttempted]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

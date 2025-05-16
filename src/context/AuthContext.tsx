@@ -33,7 +33,6 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       console.log("Auth state changed:", event);
       setSession(newSession);
       setUser(newSession?.user ?? null);
-      setLoading(false); // Set loading to false on auth state change
     });
 
     // Then check for existing session
@@ -62,22 +61,18 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      
-      // Success toast
-      toast.success("Signed in successfully");
     } catch (error: any) {
       toast.error(error.message || "Error signing in");
       console.error("Error signing in:", error);
-      setLoading(false); // Set loading to false on error
+    } finally {
+      setLoading(false);
     }
-    // Don't set loading to false here, it will be set by the auth state change event
   };
 
   const signUp = async (email: string, password: string, profileData: ProfileData) => {
     try {
       setLoading(true);
-      // Sign up the user with metadata
-      const { error, data } = await supabase.auth.signUp({ 
+      const { error } = await supabase.auth.signUp({ 
         email, 
         password,
         options: {
@@ -94,9 +89,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     } catch (error: any) {
       toast.error(error.message || "Error signing up");
       console.error("Error signing up:", error);
-      setLoading(false); // Set loading to false on error
+    } finally {
+      setLoading(false);
     }
-    // Don't set loading to false here, it will be set by the auth state change event
   };
 
   const signOut = async () => {

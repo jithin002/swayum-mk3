@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
+import { useOrder } from "@/context/OrderContext";
+import QuantitySelector from "@/components/QuantitySelector";
 import { formatTimeSlot } from "@/services/timeSlotService";
 import { toast } from "sonner";
 import { ShoppingCart, CreditCard } from "lucide-react";
 
 const CartPage: React.FC = () => {
-  const { cartItems, removeFromCart, updateItemQuantity, getCartTotal } = useCart();
+  const { cartItems, removeFromCart, updateItemQuantity, getCartTotal, clearCart } = useCart();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
@@ -15,7 +17,7 @@ const CartPage: React.FC = () => {
       return;
     }
 
-    // Navigate to payment gateway
+    // Navigate to payment gateway with cart data
     navigate('/payment-gateway');
   };
 

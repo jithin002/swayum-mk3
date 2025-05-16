@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import React from "react";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 interface PrivateRouteProps {
@@ -9,15 +9,6 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
-  const location = useLocation();
-  const [redirectAttempted, setRedirectAttempted] = useState(false);
-
-  useEffect(() => {
-    // Reset redirect attempted flag when route changes
-    return () => {
-      setRedirectAttempted(false);
-    };
-  }, [location.pathname]);
 
   if (loading) {
     return (
@@ -27,12 +18,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
     );
   }
 
-  if (!user && !redirectAttempted) {
-    // Set flag to prevent redirect loops
-    setRedirectAttempted(true);
-    console.log("User not authenticated in PrivateRoute, redirecting to auth with from:", location.pathname);
-    // Save the current location so we can redirect back after login
-    return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
+  if (!user) {
+    return <Navigate to="/auth" replace />;
   }
 
   return <>{children}</>;

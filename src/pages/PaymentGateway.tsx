@@ -5,6 +5,7 @@ import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { CreditCard, IndianRupee, ArrowLeft, Check } from "lucide-react";
 import CardPaymentForm from "@/components/payment/CardPaymentForm";
@@ -29,12 +30,13 @@ const PaymentGateway: React.FC = () => {
   });
   
   const [upiId, setUpiId] = useState("");
-
-  // Protect against empty cart - redirect if no items
-  if (cartItems.length === 0 && !isProcessing && !isPaymentSuccessful) {
-    navigate("/cart");
-    return null;
-  }
+  
+  // If cart is empty, redirect to cart page
+  React.useEffect(() => {
+    if (cartItems.length === 0) {
+      navigate("/cart");
+    }
+  }, [cartItems, navigate]);
 
   const handleProcessPayment = async () => {
     // Validate form based on payment method
@@ -62,10 +64,8 @@ const PaymentGateway: React.FC = () => {
 
     setIsProcessing(true);
     
-    try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+    // Simulate payment processing
+    setTimeout(() => {
       setIsProcessing(false);
       setIsPaymentSuccessful(true);
       
@@ -87,11 +87,9 @@ const PaymentGateway: React.FC = () => {
           const order = await createOrder(cartItems, totalAmount, pickupTime);
           
           if (order) {
-            console.log("Order created successfully:", order);
             clearCart();
             navigate(`/order-confirmation/${order.id}`);
           } else {
-            console.error("Failed to create order, order is null");
             toast.error("Failed to create order");
             navigate("/cart");
           }
@@ -101,11 +99,7 @@ const PaymentGateway: React.FC = () => {
           navigate("/cart");
         }
       }, 1500);
-    } catch (error) {
-      setIsProcessing(false);
-      console.error("Payment processing error:", error);
-      toast.error("Payment failed. Please try again.");
-    }
+    }, 2000);
   };
 
   const handleGoBack = () => {

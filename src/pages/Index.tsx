@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -37,7 +36,7 @@ const Index: React.FC = () => {
             </div>
           </Link>
           
-          <a href="https://maps.app.goo.gl/a9kg77ZJftj3V8Z18" target="_blank" rel="noopener noreferrer" className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <Link to="/locations" className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="bg-orange-100 p-2 rounded-full">
@@ -55,9 +54,26 @@ const Index: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </div>
-          </a>
+          </Link>
           
-          
+          <Link to="/auth" className="block bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="bg-orange-100 p-2 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-swayum-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div className="ml-4">
+                  <h2 className="text-xl font-semibold">Sign In / Sign Up</h2>
+                  <p className="text-gray-600">Manage your account and orders</p>
+                </div>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </Link>
         </div>
         
         {/* How It Works Section */}

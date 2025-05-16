@@ -17,16 +17,19 @@ const AuthPage: React.FC = () => {
   const { signIn, signUp, user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [redirectAttempted, setRedirectAttempted] = useState(false);
   
   // Get the return URL from location state, or default to home
   const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
-    if (user) {
+    if (user && !redirectAttempted) {
+      console.log("User authenticated, redirecting to:", from);
+      setRedirectAttempted(true);
       // Navigate to the return URL if available, otherwise go to home
       navigate(from, { replace: true });
     }
-  }, [user, navigate, from]);
+  }, [user, navigate, from, redirectAttempted]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

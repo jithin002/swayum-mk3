@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
       console.log("Auth state changed:", event);
       setSession(newSession);
       setUser(newSession?.user ?? null);
+      setLoading(false); // Set loading to false on auth state change
     });
 
     // Then check for existing session
@@ -67,9 +68,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     } catch (error: any) {
       toast.error(error.message || "Error signing in");
       console.error("Error signing in:", error);
-    } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false on error
     }
+    // Don't set loading to false here, it will be set by the auth state change event
   };
 
   const signUp = async (email: string, password: string, profileData: ProfileData) => {
@@ -93,9 +94,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     } catch (error: any) {
       toast.error(error.message || "Error signing up");
       console.error("Error signing up:", error);
-    } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false on error
     }
+    // Don't set loading to false here, it will be set by the auth state change event
   };
 
   const signOut = async () => {

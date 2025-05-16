@@ -6,13 +6,15 @@ export interface CartItem extends MenuItem {
 
 export interface Order {
   id: string;
+  refId?: string;
+  internalId?: string;
   items: CartItem[];
   totalAmount: number;
   orderDate: string;
   pickupTime: string;
   status: OrderStatus;
   orderCode: string;
-  itemName?: string; // Add itemName property
+  itemName?: string;
 }
 
 export interface OrderStatus {
@@ -34,8 +36,10 @@ export interface MenuItem {
   description: string;
   price: number;
   image_url: string;
+  image?: string; // Added for backward compatibility
   category: string;
   is_vegetarian: boolean;
+  isVegetarian?: boolean; // Added for backward compatibility
   available: boolean;
   maxQuantity?: number;
 }

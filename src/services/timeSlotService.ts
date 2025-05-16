@@ -1,40 +1,34 @@
 
 import { TimeSlot } from "@/types";
-import { format, parse, addMinutes } from "date-fns";
+import { format, addMinutes, parse, isAfter } from "date-fns";
+import { v4 as uuidv4 } from "uuid";
 
-// Generate time slots with 15-minute intervals within a 2-hour window
-export const generateTimeSlots = (): TimeSlot[] => {
+// Function to generate time slots for pickup
+export const generateTimeSlots = (startTime: string = "11:00", endTime: string = "20:00", intervalMinutes: number = 30): TimeSlot[] => {
+  const timeSlots: TimeSlot[] = [];
   const now = new Date();
-  const slots: TimeSlot[] = [];
   
-  // Round current time to next 15 min interval
-  const minutes = now.getMinutes();
-  const remainder = minutes % 15;
-  const roundedMinutes = remainder === 0 ? minutes : minutes + (15 - remainder);
+  // Parse the start and end times
+  const startDate = parse(startTime, "HH:mm", new Date());
+  const endDate = parse(endTime, "HH:mm", new Date());
   
-  const startTime = new Date(now);
-  startTime.setMinutes(roundedMinutes, 0, 0);
+  let currentTime = startDate;
   
-  // Generate slots for 2 hours (8 slots of 15 minutes)
-  for (let i = 0; i < 8; i++) {
-    const slotTime = addMinutes(startTime, i * 15);
-    slots.push({
-      time: format(slotTime, "h:mm a"),
-      available: true
+  while (currentTime <= endDate) {
+    const timeString = format(currentTime, "HH:mm");
+    const slotDate = parse(timeString, "HH:mm", now);
+    
+    // Set availability based on whether the slot is in the future
+    const isAvailable = isAfter(slotDate, now);
+    
+    timeSlots.push({
+      id: uuidv4(),
+      time: timeString,
+      available: isAvailable
     });
+    
+    currentTime = addMinutes(currentTime, intervalMinutes);
   }
   
-  return slots;
-};
-
-// Format time slots for display
-export const formatTimeSlot = (timeSlot: string): string => {
-  try {
-    // Try to parse and format the time
-    const parsedTime = parse(timeSlot, "h:mm a", new Date());
-    return format(parsedTime, "h:mm a");
-  } catch (error) {
-    // If parsing fails, return the original string
-    return timeSlot;
-  }
+  return timeSlots;
 };

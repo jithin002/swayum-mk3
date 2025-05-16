@@ -10,6 +10,11 @@ export const createOrderInDB = async (
   itemName: string
 ) => {
   try {
+    console.log("Creating order with items:", items);
+    console.log("Total amount:", totalAmount);
+    console.log("Pickup time:", pickupTime);
+    console.log("Item name:", itemName);
+    
     // Create the order in the orders table
     const { data: orderData, error } = await supabase
       .from('orders')

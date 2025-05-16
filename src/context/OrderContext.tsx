@@ -49,8 +49,11 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
       
       // Create order in Supabase if user is logged in
       let orderId: string;
+      let refId: string;
       
       if (user) {
+        console.log("Creating order in database for user:", user.id);
+        
         const dbOrderId = await createOrderInDB(
           user.id, 
           cartItems, 
@@ -63,6 +66,25 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
           toast.error("Failed to create order. Please try again.");
           return null;
         }
+        
+        // Generate a ref_id for the order (like the local ID format)
+        const today = new Date();
+        const dateStr = today.getFullYear().toString().substr(-2) + 
+                       (today.getMonth() + 1).toString().padStart(2, '0') + 
+                       today.getDate().toString().padStart(2, '0');
+        const randomId = Math.floor(1000 + Math.random() * 9000).toString();
+        refId = `SW-${dateStr}-${randomId}`;
+        
+        // Update the order in the database with the ref_id
+        const { error } = await supabase
+          .from('orders')
+          .update({ ref_id: refId })
+          .eq('id', dbOrderId);
+          
+        if (error) {
+          console.error("Error updating ref_id:", error);
+        }
+        
         orderId = dbOrderId;
       } else {
         // Fallback to local storage if not logged in
@@ -72,11 +94,13 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
                        (today.getMonth() + 1).toString().padStart(2, '0') + 
                        today.getDate().toString().padStart(2, '0');
         const randomId = Math.floor(1000 + Math.random() * 9000).toString();
-        orderId = `SW-${dateStr}-${randomId}`;
+        refId = `SW-${dateStr}-${randomId}`;
+        orderId = refId;
       }
       
       const newOrder: Order = {
         id: orderId,
+        refId: refId,
         items: cartItems,
         totalAmount,
         orderDate: format(new Date(), "MMMM d, yyyy"),
@@ -88,7 +112,7 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
           completed: false,
         },
         orderCode,
-        itemName: cartItems.map(item => `${item.name} (${item.quantity})`).join(", ")
+        itemName: itemNames
       };
 
       setOrders((prevOrders) => [...prevOrders, newOrder]);
@@ -101,13 +125,13 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
   };
 
   const getOrderById = (id: string) => {
-    return orders.find((order) => order.id === id);
+    return orders.find((order) => order.id === id || order.refId === id);
   };
 
   const updateOrderStatus = (id: string, status: Partial<OrderStatus>) => {
     setOrders((prevOrders) =>
       prevOrders.map((order) => {
-        if (order.id === id) {
+        if (order.id === id || order.refId === id) {
           return {
             ...order,
             status: { ...order.status, ...status },
@@ -120,7 +144,7 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
 
   const collectOrder = async (id: string, code: string): Promise<boolean> => {
     // Check if the code matches
-    const order = orders.find((o) => o.id === id);
+    const order = orders.find((o) => o.id === id || o.refId === id);
     if (!order || order.orderCode !== code) {
       toast.error("Incorrect collection code");
       return false;
@@ -129,7 +153,7 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
     // Update the order status
     setOrders((prevOrders) =>
       prevOrders.map((order) => {
-        if (order.id === id) {
+        if (order.id === id || order.refId === id) {
           return {
             ...order,
             status: { ...order.status, completed: true },

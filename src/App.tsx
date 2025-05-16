@@ -35,11 +35,7 @@ const App = () => {
                   <Route path="/" element={<Index />} />
                   <Route path="/menu" element={<MenuPage />} />
                   <Route path="/menu/:id" element={<MenuItemDetail />} />
-                  <Route path="/cart" element={
-                    <PrivateRoute>
-                      <CartPage />
-                    </PrivateRoute>
-                  } />
+                  <Route path="/cart" element={<CartPage />} />
                   <Route path="/payment" element={
                     <PrivateRoute>
                       <CartPage />

@@ -1,7 +1,9 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
+import { useAuth } from "@/context/AuthContext";
 import QuantitySelector from "@/components/QuantitySelector";
 import { formatTimeSlot } from "@/services/timeSlotService";
 import { toast } from "sonner";
@@ -9,11 +11,18 @@ import { ShoppingCart, CreditCard } from "lucide-react";
 
 const CartPage: React.FC = () => {
   const { cartItems, removeFromCart, updateItemQuantity, getCartTotal, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
       toast.error("Your cart is empty");
+      return;
+    }
+
+    if (!user) {
+      // If user is not authenticated, redirect to auth page with return URL
+      navigate('/auth', { state: { from: '/payment-gateway' } });
       return;
     }
 

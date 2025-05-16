@@ -21,6 +21,7 @@ const PaymentGateway: React.FC = () => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   
   // Form data for different payment methods
   const [cardData, setCardData] = useState({
@@ -34,18 +35,19 @@ const PaymentGateway: React.FC = () => {
   
   // Check if user is authenticated
   useEffect(() => {
-    if (!user) {
+    if (!user && !isRedirecting) {
+      setIsRedirecting(true);
       console.log("User not authenticated, redirecting to auth page");
-      navigate("/auth", { state: { returnTo: "/payment-gateway" } });
+      navigate("/auth", { state: { from: "/payment-gateway" } });
     }
-  }, [user, navigate]);
+  }, [user, navigate, isRedirecting]);
   
   // If cart is empty, redirect to cart page
   useEffect(() => {
-    if (cartItems.length === 0) {
+    if (cartItems.length === 0 && user && !isProcessing && !isPaymentSuccessful) {
       navigate("/cart");
     }
-  }, [cartItems, navigate]);
+  }, [cartItems, navigate, user, isProcessing, isPaymentSuccessful]);
 
   const handleProcessPayment = async () => {
     // Validate form based on payment method

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Order, CartItem, OrderStatus } from "@/types";
 import { format } from "date-fns";
@@ -43,11 +44,21 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
       // Create an order code (4 digits)
       const orderCode = Math.floor(1000 + Math.random() * 9000).toString();
       
+      // Get the names of all items in the cart joined with commas
+      const itemNames = cartItems.map(item => `${item.name} (${item.quantity})`).join(", ");
+      
       // Create order in Supabase if user is logged in
       let orderId: string;
       
       if (user) {
-        const dbOrderId = await createOrderInDB(user.id, cartItems, totalAmount, pickupTime);
+        const dbOrderId = await createOrderInDB(
+          user.id, 
+          cartItems, 
+          totalAmount, 
+          pickupTime, 
+          itemNames // Pass the joined item names to store in the database
+        );
+        
         if (!dbOrderId) {
           toast.error("Failed to create order. Please try again.");
           return null;
@@ -76,7 +87,8 @@ export const OrderProvider: React.FC<{children: React.ReactNode}> = ({ children 
           readyForPickup: false,
           completed: false,
         },
-        orderCode
+        orderCode,
+        itemName: cartItems.map(item => `${item.name} (${item.quantity})`).join(", ")
       };
 
       setOrders((prevOrders) => [...prevOrders, newOrder]);

@@ -32,3 +32,23 @@ export const generateTimeSlots = (startTime: string = "11:00", endTime: string =
   
   return timeSlots;
 };
+
+// Function to format a time slot for display
+export const formatTimeSlot = (timeString: string): string => {
+  try {
+    // If the timeString is in 24-hour format (e.g., "14:30"), convert it to 12-hour format
+    const [hours, minutes] = timeString.split(':').map(Number);
+    
+    if (isNaN(hours) || isNaN(minutes)) {
+      return timeString; // Return original if parsing fails
+    }
+    
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
+    
+    return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+  } catch (error) {
+    console.error("Error formatting time slot:", error);
+    return timeString; // Return original if any error occurs
+  }
+};

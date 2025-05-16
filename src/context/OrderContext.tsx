@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useAuth } from "./AuthContext";
 import { createOrderInDB, getOrderById, updateOrderStatus as updateOrderStatusInDB } from "@/services/orderService";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface OrderContextType {
   orders: Order[];

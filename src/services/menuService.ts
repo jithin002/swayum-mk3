@@ -38,6 +38,15 @@ export const fetchMenuItems = async (): Promise<MenuItem[]> => {
   }
 };
 
+// Function to get menu items - wrapper function for backward compatibility
+export const getMenuItems = async (fromDB: boolean = true): Promise<MenuItem[]> => {
+  if (fromDB) {
+    return fetchMenuItems();
+  } else {
+    return getLocalMenuItems();
+  }
+};
+
 // Function to fetch a specific menu item by ID from Supabase
 export const fetchMenuItemById = async (id: string): Promise<MenuItem | null> => {
   try {
@@ -72,6 +81,16 @@ export const fetchMenuItemById = async (id: string): Promise<MenuItem | null> =>
     console.error(`Error in fetchMenuItemById for ID ${id}:`, error);
     
     // Fallback to local data if API call fails
+    const localItems = getLocalMenuItems();
+    return localItems.find(item => item.id === id) || null;
+  }
+};
+
+// Function to get menu item by ID - wrapper function for backward compatibility
+export const getMenuItemById = async (id: string, fromDB: boolean = true): Promise<MenuItem | null> => {
+  if (fromDB) {
+    return fetchMenuItemById(id);
+  } else {
     const localItems = getLocalMenuItems();
     return localItems.find(item => item.id === id) || null;
   }

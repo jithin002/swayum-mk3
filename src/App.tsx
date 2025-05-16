@@ -15,7 +15,6 @@ import AuthPage from "./pages/AuthPage";
 import { CartProvider } from "./context/CartContext";
 import { OrderProvider } from "./context/OrderContext";
 import { AuthProvider } from "./context/AuthContext";
-import PrivateRoute from "./components/PrivateRoute";
 import { useState } from "react";
 
 const App = () => {
@@ -36,25 +35,10 @@ const App = () => {
                   <Route path="/menu" element={<MenuPage />} />
                   <Route path="/menu/:id" element={<MenuItemDetail />} />
                   <Route path="/cart" element={<CartPage />} />
-                  <Route path="/payment" element={
-                    <PrivateRoute>
-                      <CartPage />
-                    </PrivateRoute>
-                  } />
-                  <Route path="/payment-gateway" element={
-                    <PrivateRoute>
-                      <PaymentGateway />
-                    </PrivateRoute>
-                  } />
+                  <Route path="/payment" element={<CartPage />} />
+                  <Route path="/payment-gateway" element={<PaymentGateway />} />
                   <Route path="/auth" element={<AuthPage />} />
-                  <Route 
-                    path="/order-confirmation/:id" 
-                    element={
-                      <PrivateRoute>
-                        <OrderConfirmation />
-                      </PrivateRoute>
-                    } 
-                  />
+                  <Route path="/order-confirmation/:id" element={<OrderConfirmation />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

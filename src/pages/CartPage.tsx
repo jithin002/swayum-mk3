@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
@@ -20,13 +19,7 @@ const CartPage: React.FC = () => {
       return;
     }
 
-    if (!user) {
-      // If user is not authenticated, redirect to auth page with return URL
-      navigate('/auth', { state: { from: '/payment-gateway' } });
-      return;
-    }
-
-    // Navigate to payment gateway with cart data
+    // Remove authentication requirement - direct to payment gateway
     navigate('/payment-gateway');
   };
 

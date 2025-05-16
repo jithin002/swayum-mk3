@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useOrder } from "@/context/OrderContext";
 import { useAuth } from "@/context/AuthContext";
@@ -16,14 +16,11 @@ type PaymentMethod = "card" | "upi";
 const PaymentGateway: React.FC = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { createOrder } = useOrder();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
-  const [authRedirectAttempted, setAuthRedirectAttempted] = useState(false);
   
   // Form data for different payment methods
   const [cardData, setCardData] = useState({
@@ -35,23 +32,11 @@ const PaymentGateway: React.FC = () => {
   
   const [upiId, setUpiId] = useState("");
   
-  // Check if user is authenticated
-  useEffect(() => {
-    // Only redirect to auth if not authenticated, not already redirecting, and not already attempted
-    if (!user && !loading && !isRedirecting && !authRedirectAttempted) {
-      console.log("User not authenticated, redirecting to auth page");
-      setIsRedirecting(true);
-      setAuthRedirectAttempted(true);
-      navigate("/auth", { state: { from: "/payment-gateway" } });
-    }
-  }, [user, navigate, isRedirecting, loading, authRedirectAttempted]);
-  
-  // If cart is empty, redirect to cart page - but only if user is authenticated and not in processing state
-  useEffect(() => {
-    if (cartItems.length === 0 && user && !isProcessing && !isPaymentSuccessful && !loading) {
-      navigate("/cart");
-    }
-  }, [cartItems, navigate, user, isProcessing, isPaymentSuccessful, loading]);
+  // If cart is empty, redirect to cart page
+  if (cartItems.length === 0 && !isProcessing && !isPaymentSuccessful) {
+    navigate("/cart");
+    return null;
+  }
 
   const handleProcessPayment = async () => {
     // Validate form based on payment method
@@ -75,12 +60,6 @@ const PaymentGateway: React.FC = () => {
         toast.error("Please enter a valid UPI ID");
         return;
       }
-    }
-
-    if (!user) {
-      toast.error("You must be logged in to complete payment");
-      navigate("/auth", { state: { from: "/payment-gateway" } });
-      return;
     }
 
     setIsProcessing(true);

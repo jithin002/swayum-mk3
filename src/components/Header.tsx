@@ -71,7 +71,7 @@ const Header: React.FC = () => {
         
         <Link to="/cart" className="relative" aria-label="Cart">
           <ShoppingCart size={24} />
-          {cartItemCount > 0 && <span className="absolute -top-2 -right-2 bg-swayum-white text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          {cartItemCount > 0 && <span className="absolute -top-2 -right-2 bg-swayum-orange rounded-full w-5 h-5 flex items-center justify-center text-white-50 text-xs">
               {cartItemCount}
             </span>}
         </Link>

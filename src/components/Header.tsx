@@ -1,40 +1,32 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, User, LogOut } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 const Header: React.FC = () => {
-  const { getItemCount } = useCart();
-  const { user, signOut } = useAuth();
+  const {
+    getItemCount
+  } = useCart();
+  const {
+    user,
+    signOut
+  } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  
   const cartItemCount = getItemCount();
-  
+
   // Get the first letter of the email as the avatar fallback
   const getInitials = () => {
     if (!user || !user.email) return 'G';
     return user.email.charAt(0).toUpperCase();
   };
-  
   const handleSignOut = async () => {
     setIsLoggingOut(true);
     await signOut();
     setIsLoggingOut(false);
   };
-  
-  return (
-    <header className="swayum-header">
+  return <header className="swayum-header">
       <Link to="/" className="flex items-center">
         <div className="ml-2">
           <h1 className="font-bold text-2xl">SwaYum</h1>
@@ -53,8 +45,7 @@ const Header: React.FC = () => {
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            {user ? (
-              <>
+            {user ? <>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-gray-600">
@@ -65,9 +56,7 @@ const Header: React.FC = () => {
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>{isLoggingOut ? 'Signing out...' : 'Sign out'}</span>
                 </DropdownMenuItem>
-              </>
-            ) : (
-              <>
+              </> : <>
                 <DropdownMenuLabel>Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <Link to="/auth">
@@ -76,22 +65,17 @@ const Header: React.FC = () => {
                     <span>Sign in / Register</span>
                   </DropdownMenuItem>
                 </Link>
-              </>
-            )}
+              </>}
           </DropdownMenuContent>
         </DropdownMenu>
         
         <Link to="/cart" className="relative" aria-label="Cart">
           <ShoppingCart size={24} />
-          {cartItemCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-swayum-orange text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          {cartItemCount > 0 && <span className="absolute -top-2 -right-2 bg-swayum-white text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {cartItemCount}
-            </span>
-          )}
+            </span>}
         </Link>
       </div>
-    </header>
-  );
+    </header>;
 };
-
 export default Header;

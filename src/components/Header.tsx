@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, User, LogOut } from 'lucide-react';
@@ -5,6 +6,9 @@ import { useCart } from '@/context/CartContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+const LOGO_SRC = "/lovable-uploads/30a59ace-4f34-444a-b557-2b9eb8191dec.png";
+
 const Header: React.FC = () => {
   const {
     getItemCount
@@ -26,9 +30,17 @@ const Header: React.FC = () => {
     await signOut();
     setIsLoggingOut(false);
   };
-  return <header className="swayum-header">
+
+  return (
+    <header className="swayum-header">
       <Link to="/" className="flex items-center">
-        <div className="ml-2">
+        <img
+          src={LOGO_SRC}
+          alt="SwaYum Logo"
+          className="h-10 w-10 rounded-full object-cover mr-2 border shadow"
+          style={{ background: 'white' }}
+        />
+        <div>
           <h1 className="font-bold text-2xl">SwaYum</h1>
         </div>
       </Link>
@@ -76,6 +88,8 @@ const Header: React.FC = () => {
             </span>}
         </Link>
       </div>
-    </header>;
+    </header>
+  );
 };
+
 export default Header;

@@ -9,22 +9,22 @@ const STATUS_DETAILS: Record<
   { label: string; icon: React.ReactNode; color: string }
 > = {
   pending: {
-    label: "Order Received",
+    label: "Collection Pending",
     icon: <Clock size={20} className="text-blue-500 mr-2" />,
     color: "bg-blue-100 text-blue-800",
   },
   preparing: {
-    label: "Being Prepared",
+    label: "Collection Pending",
     icon: <Clock size={20} className="text-yellow-600 mr-2" />,
     color: "bg-yellow-50 text-yellow-800",
   },
   ready: {
-    label: "Ready for Pickup",
+    label: "Collection Pending",
     icon: <Check size={20} className="text-green-500 mr-2" />,
     color: "bg-green-100 text-green-800",
   },
   completed: {
-    label: "Order Collected",
+    label: "Order Collection Completed",
     icon: <Check size={20} className="text-green-800 mr-2" />,
     color: "bg-green-200 text-green-900",
   }
@@ -38,7 +38,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
   // fallback if backend returns status not covered
   const rawStatus = order.rawStatus || "pending";
   const statusData = STATUS_DETAILS[rawStatus] || {
-    label: rawStatus[0].toUpperCase() + rawStatus.slice(1),
+    label: "Collection Pending",
     icon: <Clock size={20} className="text-gray-400 mr-2" />,
     color: "bg-gray-100 text-gray-600"
   };

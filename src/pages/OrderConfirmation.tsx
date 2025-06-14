@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useOrder } from "@/context/OrderContext";
@@ -9,9 +8,9 @@ import OrderConfirmationBanner from "@/components/order/OrderConfirmationBanner"
 import OrderDetails from "@/components/order/OrderDetails";
 import OrderTracking from "@/components/order/OrderTracking";
 import OrderItems from "@/components/order/OrderItems";
-import CollectionCode from "@/components/order/CollectionCode";
 import BackToMenuButton from "@/components/order/BackToMenuButton";
 import { toast } from "sonner";
+import { Check, Clock } from "lucide-react";
 
 const OrderConfirmation: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -44,7 +43,7 @@ const OrderConfirmation: React.FC = () => {
             order_items(*)
           `)
           .eq('ref_id', id)
-          .single();
+          .maybeSingle(); // <-- CHANGED FROM single()
 
         if (error || !data) {
           console.error("Error fetching order:", error);
@@ -79,11 +78,12 @@ const OrderConfirmation: React.FC = () => {
             readyForPickup: data.status === 'ready' || data.status === 'completed',
             completed: data.status === 'completed' || data.collected,
           },
-          orderCode: data.order_code || ""
+          orderCode: data.order_code || "",
+          rawStatus: data.status // <-- pass the raw status value!
         };
 
         setOrder(formattedOrder);
-        
+
         // Auto update order status for demo purposes
         if (data.status === 'pending') {
           setTimeout(() => updateOrderStatusInDB(data.id, 'preparing'), 8000);
@@ -151,50 +151,6 @@ const OrderConfirmation: React.FC = () => {
     }
   };
 
-  const handleCollectOrder = async (code: string): Promise<boolean> => {
-    try {
-      if (!order) return false;
-      
-      // Verify the collection code
-      if (code !== order.orderCode) {
-        toast.error("Incorrect collection code");
-        return false;
-      }
-      
-      // Mark the order as collected in the database
-      const { error } = await supabase
-        .from('orders')
-        .update({ 
-          collected: true,
-          status: 'completed'
-        })
-        .eq('id', order.internalId);
-
-      if (error) {
-        console.error("Error marking order as collected:", error);
-        toast.error("Failed to collect the order");
-        return false;
-      }
-      
-      // Update local state
-      setOrder(prev => ({
-        ...prev,
-        status: {
-          ...prev.status,
-          completed: true
-        }
-      }));
-      
-      clearCart(); // Clear the cart after successful collection
-      toast.success("Order collected successfully!");
-      return true;
-    } catch (error) {
-      console.error("Error collecting order:", error);
-      toast.error("An error occurred");
-      return false;
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center">
@@ -209,15 +165,17 @@ const OrderConfirmation: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col pb-24">
       <OrderHeader />
-      
+
       <main className="flex-1 p-4">
         <OrderConfirmationBanner orderId={order.id} />
-        <OrderDetails order={order} onCollectOrder={handleCollectOrder} />
+        <OrderDetails
+          order={order}
+        />
         <OrderTracking status={order.status} />
         <OrderItems items={order.items} totalAmount={order.totalAmount} />
-        {order.orderCode && <CollectionCode code={order.orderCode} />}
+        {/* Removed CollectionCode */}
       </main>
-      
+
       <BackToMenuButton />
     </div>
   );

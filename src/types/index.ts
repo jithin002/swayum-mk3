@@ -1,4 +1,3 @@
-
 export interface MenuItem {
   id: string;
   name: string;
@@ -37,6 +36,8 @@ export interface Order {
   pickupTime: string;
   status: OrderStatus;
   orderCode?: string;
+  /** The raw string status from the backend (e.g. "pending", "preparing", "ready", "completed") **/
+  rawStatus?: string;
 }
 
 export interface PaymentInfo {

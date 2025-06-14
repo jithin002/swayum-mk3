@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Check, Clock, Bell } from "lucide-react";
 import { Order } from "@/types";
@@ -19,8 +20,8 @@ const STATUS_DETAILS: Record<
   },
   ready: {
     label: "Collection Pending",
-    icon: <Bell size={20} className="text-swayum-orange mr-2" />,
-    color: "bg-swayum-light-orange text-swayum-orange",
+    icon: <Bell size={20} className="text-white mr-2" />,
+    color: "bg-swayum-light-orange text-white",
   },
   completed: {
     label: "Order Collection Completed",
@@ -88,3 +89,4 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
 };
 
 export default OrderDetails;
+

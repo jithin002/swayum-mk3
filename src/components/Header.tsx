@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingCart, User, LogOut } from 'lucide-react';
@@ -6,6 +5,7 @@ import { useCart } from '@/context/CartContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/context/AuthContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import SwayumLogo from "./SwayumLogo";
 
 const LOGO_SRC = "/lovable-uploads/30a59ace-4f34-444a-b557-2b9eb8191dec.png";
 
@@ -34,12 +34,7 @@ const Header: React.FC = () => {
   return (
     <header className="swayum-header">
       <Link to="/" className="flex items-center">
-        <img
-          src={LOGO_SRC}
-          alt="SwaYum Logo"
-          className="h-10 w-10 rounded-full object-cover mr-2 border shadow"
-          style={{ background: 'white' }}
-        />
+        <SwayumLogo size={40} />
         <div>
           <h1 className="font-bold text-2xl">SwaYum</h1>
         </div>

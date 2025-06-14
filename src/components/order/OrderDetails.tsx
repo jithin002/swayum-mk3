@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Check, Clock } from "lucide-react";
+import { Check, Clock, Bell } from "lucide-react";
 import { Order } from "@/types";
 
 // Status mapping for UI
@@ -20,8 +19,8 @@ const STATUS_DETAILS: Record<
   },
   ready: {
     label: "Collection Pending",
-    icon: <Check size={20} className="text-green-500 mr-2" />,
-    color: "bg-green-100 text-green-800",
+    icon: <Bell size={20} className="text-swayum-orange mr-2" />,
+    color: "bg-swayum-light-orange text-swayum-orange",
   },
   completed: {
     label: "Order Collection Completed",

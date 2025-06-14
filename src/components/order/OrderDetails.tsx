@@ -21,7 +21,7 @@ const STATUS_DETAILS: Record<
   ready: {
     label: "Collection Pending",
     icon: <Bell size={20} className="text-orange-800 mr-2" />,
-    color: "bg-orange-50 text-orange-800",
+    color: "bg-orange-100 text-orange-800",
   },
   completed: {
     label: "Order Collection Completed",

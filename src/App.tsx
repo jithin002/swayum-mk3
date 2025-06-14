@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,10 +16,31 @@ import { OrderProvider } from "./context/OrderContext";
 import { AuthProvider } from "./context/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import { useState } from "react";
+import SplashScreen from "./components/SplashScreen";
+import { useEffect } from "react";
 
 const App = () => {
   // Create a new QueryClient instance inside the component
   const [queryClient] = useState(() => new QueryClient());
+  const [showSplash, setShowSplash] = useState(() => {
+    // Only show splash if not shown in this session (sessionStorage)
+    return typeof window !== "undefined"
+      ? sessionStorage.getItem("swayum_splash_seen") !== "true"
+      : true;
+  });
+
+  useEffect(() => {
+    if (showSplash) {
+      const timeout = setTimeout(() => {
+        setShowSplash(false);
+        // Mark splash as seen in this session
+        sessionStorage.setItem("swayum_splash_seen", "true");
+      }, 3000);
+      return () => clearTimeout(timeout);
+    }
+  }, [showSplash]);
+
+  if (showSplash) return <SplashScreen />;
 
   return (
     <QueryClientProvider client={queryClient}>

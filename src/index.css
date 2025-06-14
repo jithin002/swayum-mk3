@@ -148,3 +148,21 @@
 .quantity-display {
   @apply px-3 py-1 border-x;
 }
+
+/* Animations for splash screen */
+@layer utilities {
+  .animate-fade-in {
+    animation: fade-in 0.7s ease;
+  }
+  .animate-scale-in {
+    animation: scale-in 0.5s cubic-bezier(0.45,0,0.55,1);
+  }
+}
+
+/* Extra spinner for splash */
+@keyframes spin {
+  to { transform: rotate(360deg);}
+}
+.animate-spin {
+  animation: spin 1.0s linear infinite;
+}

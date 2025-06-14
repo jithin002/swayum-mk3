@@ -75,7 +75,7 @@ const CartPage: React.FC = () => {
                         </div>
                       </div>
                       
-                      <div className="max-w-[100px]">
+                      <div>
                         <QuantitySelector
                           quantity={item.quantity}
                           maxQuantity={item.maxQuantity}

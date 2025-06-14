@@ -11,6 +11,7 @@ import OrderItems from "@/components/order/OrderItems";
 import BackToMenuButton from "@/components/order/BackToMenuButton";
 import { toast } from "sonner";
 import { Check, Clock } from "lucide-react";
+import CollectionCode from "@/components/order/CollectionCode";
 
 const OrderConfirmation: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -173,7 +174,10 @@ const OrderConfirmation: React.FC = () => {
         />
         <OrderTracking status={order.status} />
         <OrderItems items={order.items} totalAmount={order.totalAmount} />
-        {/* Removed CollectionCode */}
+        {/* CollectionCode, visible if order.orderCode exists */}
+        {order.orderCode && (
+          <CollectionCode code={order.orderCode} />
+        )}
       </main>
 
       <BackToMenuButton />

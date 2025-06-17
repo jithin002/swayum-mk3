@@ -102,8 +102,8 @@ const Index: React.FC = () => {
                 </div>
                 
               </div>
-              <h3 className="text-xl font-semibold mb-2">Get Notified</h3>
-              <p className="text-gray-600">Receive a notification when your order is ready for pickup</p>
+              <h3 className="text-xl font-semibold mb-2">Track Your Order</h3>
+              <p className="text-gray-600">Know when your order is ready for pickup</p>
             </div>
             
             {/* Step 3 */}
@@ -114,8 +114,8 @@ const Index: React.FC = () => {
                 </div>
                 
               </div>
-              <h3 className="text-xl font-semibold mb-2">Scan & Collect</h3>
-              <p className="text-gray-600">Show your QR code at the counter and enjoy your meal</p>
+              <h3 className="text-xl font-semibold mb-2">Collect Your Order</h3>
+              <p className="text-gray-600">Show your Collection code at the counter and enjoy your meal</p>
             </div>
           </div>
         </div>

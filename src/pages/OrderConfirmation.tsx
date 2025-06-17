@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useOrder } from "@/context/OrderContext";
@@ -44,7 +45,7 @@ const OrderConfirmation: React.FC = () => {
             order_items(*)
           `)
           .eq('ref_id', id)
-          .maybeSingle(); // <-- CHANGED FROM single()
+          .maybeSingle();
 
         if (error || !data) {
           console.error("Error fetching order:", error);
@@ -80,19 +81,14 @@ const OrderConfirmation: React.FC = () => {
             completed: data.status === 'completed' || data.collected,
           },
           orderCode: data.order_code || "",
-          rawStatus: data.status // <-- pass the raw status value!
+          rawStatus: data.status
         };
 
         setOrder(formattedOrder);
 
-        // Auto update order status for demo purposes
-        if (data.status === 'pending') {
-          setTimeout(() => updateOrderStatusInDB(data.id, 'preparing'), 8000);
-        }
+        // REMOVED: Automatic status updates that were causing unwanted transitions
+        // The order status will now only change through manual admin intervention
         
-        if (data.status === 'preparing') {
-          setTimeout(() => updateOrderStatusInDB(data.id, 'ready'), 7000);
-        }
       } catch (error) {
         console.error("Error in order fetch:", error);
         toast.error("An error occurred while fetching your order");
@@ -104,53 +100,7 @@ const OrderConfirmation: React.FC = () => {
     fetchOrder();
   }, [id, navigate]);
 
-  const updateOrderStatusInDB = async (orderId: string, status: string) => {
-    try {
-      const { error } = await supabase
-        .from('orders')
-        .update({ status })
-        .eq('id', orderId);
-
-      if (error) {
-        console.error("Error updating order status:", error);
-        return;
-      }
-
-      // Refresh the order data
-      const { data, error: fetchError } = await supabase
-        .from('orders')
-        .select(`
-          id, 
-          ref_id, 
-          total_amount, 
-          created_at, 
-          status, 
-          pickup_time, 
-          order_code,
-          collected,
-          order_items(*)
-        `)
-        .eq('id', orderId)
-        .single();
-
-      if (fetchError || !data) {
-        console.error("Error fetching updated order:", fetchError);
-        return;
-      }
-
-      // Update the order state
-      setOrder(prev => ({
-        ...prev,
-        status: {
-          ...prev.status,
-          preparation: data.status === 'preparing' || data.status === 'ready' || data.status === 'completed',
-          readyForPickup: data.status === 'ready' || data.status === 'completed',
-        }
-      }));
-    } catch (error) {
-      console.error("Error in update order status:", error);
-    }
-  };
+  // REMOVED: updateOrderStatusInDB function since we're not automatically updating statuses anymore
 
   if (loading) {
     return (

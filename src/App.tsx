@@ -15,7 +15,6 @@ import AuthPage from "./pages/AuthPage";
 import { CartProvider } from "./context/CartContext";
 import { OrderProvider } from "./context/OrderContext";
 import { AuthProvider } from "./context/AuthContext";
-import { NotificationProvider } from "./context/NotificationContext";
 import PrivateRoute from "./components/PrivateRoute";
 import { useState } from "react";
 
@@ -27,56 +26,54 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <NotificationProvider>
-            <CartProvider>
-              <OrderProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <Sonner />
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/menu" element={<MenuPage />} />
-                    <Route path="/menu/:id" element={<MenuItemDetail />} />
-                    <Route 
-                      path="/cart" 
-                      element={
-                        <PrivateRoute>
-                          <CartPage />
-                        </PrivateRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/payment" 
-                      element={
-                        <PrivateRoute>
-                          <CartPage />
-                        </PrivateRoute>
-                      } 
-                    />
-                    <Route 
-                      path="/payment-gateway" 
-                      element={
-                        <PrivateRoute>
-                          <PaymentGateway />
-                        </PrivateRoute>
-                      } 
-                    />
-                    <Route path="/auth" element={<AuthPage />} />
-                    <Route 
-                      path="/order-confirmation/:id" 
-                      element={
-                        <PrivateRoute>
-                          <OrderConfirmation />
-                        </PrivateRoute>
-                      } 
-                    />
-                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </TooltipProvider>
-              </OrderProvider>
-            </CartProvider>
-          </NotificationProvider>
+          <CartProvider>
+            <OrderProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/menu" element={<MenuPage />} />
+                  <Route path="/menu/:id" element={<MenuItemDetail />} />
+                  <Route 
+                    path="/cart" 
+                    element={
+                      <PrivateRoute>
+                        <CartPage />
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/payment" 
+                    element={
+                      <PrivateRoute>
+                        <CartPage />
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/payment-gateway" 
+                    element={
+                      <PrivateRoute>
+                        <PaymentGateway />
+                      </PrivateRoute>
+                    } 
+                  />
+                  <Route path="/auth" element={<AuthPage />} />
+                  <Route 
+                    path="/order-confirmation/:id" 
+                    element={
+                      <PrivateRoute>
+                        <OrderConfirmation />
+                      </PrivateRoute>
+                    } 
+                  />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </TooltipProvider>
+            </OrderProvider>
+          </CartProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

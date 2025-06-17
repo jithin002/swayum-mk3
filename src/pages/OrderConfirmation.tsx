@@ -10,7 +10,6 @@ import OrderDetails from "@/components/order/OrderDetails";
 import OrderTracking from "@/components/order/OrderTracking";
 import OrderItems from "@/components/order/OrderItems";
 import BackToMenuButton from "@/components/order/BackToMenuButton";
-import NotificationSettings from "@/components/NotificationSettings";
 import { toast } from "sonner";
 import { Check, Clock } from "lucide-react";
 import CollectionCode from "@/components/order/CollectionCode";
@@ -87,40 +86,8 @@ const OrderConfirmation: React.FC = () => {
 
         setOrder(formattedOrder);
 
-        // Real-time subscription for order updates
-        const channel = supabase
-          .channel(`order-${data.id}`)
-          .on(
-            'postgres_changes',
-            {
-              event: 'UPDATE',
-              schema: 'public',
-              table: 'orders',
-              filter: `id=eq.${data.id}`
-            },
-            (payload) => {
-              const newStatus = payload.new.status;
-              const collected = payload.new.collected;
-              
-              // Update the order state with new status
-              setOrder((prevOrder: any) => ({
-                ...prevOrder,
-                status: {
-                  received: true,
-                  preparation: newStatus === 'preparing' || newStatus === 'ready' || newStatus === 'completed',
-                  readyForPickup: newStatus === 'ready' || newStatus === 'completed',
-                  completed: newStatus === 'completed' || collected,
-                },
-                rawStatus: newStatus
-              }));
-            }
-          )
-          .subscribe();
-
-        // Cleanup subscription on unmount
-        return () => {
-          supabase.removeChannel(channel);
-        };
+        // REMOVED: Automatic status updates that were causing unwanted transitions
+        // The order status will now only change through manual admin intervention
         
       } catch (error) {
         console.error("Error in order fetch:", error);
@@ -132,6 +99,8 @@ const OrderConfirmation: React.FC = () => {
 
     fetchOrder();
   }, [id, navigate]);
+
+  // REMOVED: updateOrderStatusInDB function since we're not automatically updating statuses anymore
 
   if (loading) {
     return (
@@ -150,14 +119,15 @@ const OrderConfirmation: React.FC = () => {
 
       <main className="flex-1 p-4">
         <OrderConfirmationBanner orderId={order.id} />
-        <OrderDetails order={order} />
+        <OrderDetails
+          order={order}
+        />
         <OrderTracking status={order.status} />
         <OrderItems items={order.items} totalAmount={order.totalAmount} />
         {/* CollectionCode, visible if order.orderCode exists */}
         {order.orderCode && (
           <CollectionCode code={order.orderCode} />
         )}
-        <NotificationSettings />
       </main>
 
       <BackToMenuButton />

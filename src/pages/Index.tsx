@@ -1,9 +1,11 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ImageCarousel from "@/components/ImageCarousel";
 import { QrCode, Bell, ShoppingCart, ExternalLink } from "lucide-react";
+
 const Index: React.FC = () => {
   return <div className="min-h-screen flex flex-col">
       <Header />
@@ -124,4 +126,5 @@ const Index: React.FC = () => {
       <Footer />
     </div>;
 };
+
 export default Index;

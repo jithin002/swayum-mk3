@@ -4,8 +4,28 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ImageCarousel from "@/components/ImageCarousel";
 import { QrCode, Bell, ShoppingCart, ExternalLink } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const Index: React.FC = () => {
+  const { user } = useAuth();
+  
+  // Get user's name from metadata or email, fallback to "User!"
+  const getUserName = () => {
+    if (!user) return "User!";
+    
+    // Try to get name from user metadata first
+    const metadataName = user.user_metadata?.name;
+    if (metadataName) return metadataName;
+    
+    // If no name in metadata, try to get first part of email
+    if (user.email) {
+      const emailPrefix = user.email.split('@')[0];
+      return emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+    }
+    
+    return "User!";
+  };
+
   return <div className="min-h-screen flex flex-col">
       <Header />
       
@@ -13,7 +33,7 @@ const Index: React.FC = () => {
         <div className="mb-8">
           <ImageCarousel />
           
-          <h1 className="text-4xl font-bold mb-2 mt-6">Welcome, User!</h1>
+          <h1 className="text-4xl font-bold mb-2 mt-6">Welcome, {getUserName()}!</h1>
           <p className="text-xl text-gray-600">Skip waiting in lines, not meals!!!</p>
         </div>
         
@@ -78,7 +98,6 @@ const Index: React.FC = () => {
           </Link>
         </div>
         
-        {/* How It Works Section */}
         <div className="py-10">
           <h2 className="text-3xl font-bold text-center mb-10">How It Works</h2>
           
